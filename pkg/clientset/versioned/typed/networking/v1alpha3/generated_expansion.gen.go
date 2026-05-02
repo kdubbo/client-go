@@ -18,6 +18,4 @@
 
 package v1alpha3
 
-type DestinationRuleExpansion interface{}
-
-type VirtualServiceExpansion interface{}
+type MeshServiceExpansion interface{}

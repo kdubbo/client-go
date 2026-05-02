@@ -3,6 +3,7 @@ module github.com/kdubbo/client-go
 go 1.25.0
 
 require (
+	github.com/kdubbo/api v0.0.0-20260322192101-bf9af0bbaf5e
 	k8s.io/apimachinery v0.34.1
 	k8s.io/client-go v0.34.1
 	sigs.k8s.io/structured-merge-diff/v4 v4.6.0
@@ -23,7 +24,6 @@ require (
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/kdubbo/api v0.0.0-20260322192101-bf9af0bbaf5e // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.3-0.20250322232337-35a7c28c31ee // indirect
@@ -55,3 +55,5 @@ require (
 	sigs.k8s.io/structured-merge-diff/v6 v6.3.0 // indirect
 	sigs.k8s.io/yaml v1.6.0 // indirect
 )
+
+replace github.com/kdubbo/api => ../api

@@ -54,10 +54,8 @@ func (f *genericInformer) Lister() cache.GenericLister {
 func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource) (GenericInformer, error) {
 	switch resource {
 	// Group=networking.dubbo.apache.org, Version=v1alpha3
-	case v1alpha3.SchemeGroupVersion.WithResource("destinationrules"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Networking().V1alpha3().DestinationRules().Informer()}, nil
-	case v1alpha3.SchemeGroupVersion.WithResource("virtualservices"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Networking().V1alpha3().VirtualServices().Informer()}, nil
+	case v1alpha3.SchemeGroupVersion.WithResource("meshservices"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Networking().V1alpha3().MeshServices().Informer()}, nil
 
 		// Group=security.dubbo.apache.org, Version=v1alpha3
 	case securityv1alpha3.SchemeGroupVersion.WithResource("peerauthentications"):

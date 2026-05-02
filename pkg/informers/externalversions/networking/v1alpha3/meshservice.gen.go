@@ -32,59 +32,59 @@ import (
 	cache "k8s.io/client-go/tools/cache"
 )
 
-// DestinationRuleInformer provides access to a shared informer and lister for
-// DestinationRules.
-type DestinationRuleInformer interface {
+// MeshServiceInformer provides access to a shared informer and lister for
+// MeshServices.
+type MeshServiceInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha3.DestinationRuleLister
+	Lister() v1alpha3.MeshServiceLister
 }
 
-type destinationRuleInformer struct {
+type meshServiceInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
 	tweakListOptions internalinterfaces.TweakListOptionsFunc
 	namespace        string
 }
 
-// NewDestinationRuleInformer constructs a new informer for DestinationRule type.
+// NewMeshServiceInformer constructs a new informer for MeshService type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewDestinationRuleInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
-	return NewFilteredDestinationRuleInformer(client, namespace, resyncPeriod, indexers, nil)
+func NewMeshServiceInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
+	return NewFilteredMeshServiceInformer(client, namespace, resyncPeriod, indexers, nil)
 }
 
-// NewFilteredDestinationRuleInformer constructs a new informer for DestinationRule type.
+// NewFilteredMeshServiceInformer constructs a new informer for MeshService type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewFilteredDestinationRuleInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
+func NewFilteredMeshServiceInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.NetworkingV1alpha3().DestinationRules(namespace).List(context.TODO(), options)
+				return client.NetworkingV1alpha3().MeshServices(namespace).List(context.TODO(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.NetworkingV1alpha3().DestinationRules(namespace).Watch(context.TODO(), options)
+				return client.NetworkingV1alpha3().MeshServices(namespace).Watch(context.TODO(), options)
 			},
 		},
-		&networkingv1alpha3.DestinationRule{},
+		&networkingv1alpha3.MeshService{},
 		resyncPeriod,
 		indexers,
 	)
 }
 
-func (f *destinationRuleInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewFilteredDestinationRuleInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
+func (f *meshServiceInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+	return NewFilteredMeshServiceInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
 }
 
-func (f *destinationRuleInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&networkingv1alpha3.DestinationRule{}, f.defaultInformer)
+func (f *meshServiceInformer) Informer() cache.SharedIndexInformer {
+	return f.factory.InformerFor(&networkingv1alpha3.MeshService{}, f.defaultInformer)
 }
 
-func (f *destinationRuleInformer) Lister() v1alpha3.DestinationRuleLister {
-	return v1alpha3.NewDestinationRuleLister(f.Informer().GetIndexer())
+func (f *meshServiceInformer) Lister() v1alpha3.MeshServiceLister {
+	return v1alpha3.NewMeshServiceLister(f.Informer().GetIndexer())
 }

@@ -28,8 +28,7 @@ import (
 
 type NetworkingV1alpha3Interface interface {
 	RESTClient() rest.Interface
-	DestinationRulesGetter
-	VirtualServicesGetter
+	MeshServicesGetter
 }
 
 // NetworkingV1alpha3Client is used to interact with features provided by the networking.dubbo.apache.org group.
@@ -37,12 +36,8 @@ type NetworkingV1alpha3Client struct {
 	restClient rest.Interface
 }
 
-func (c *NetworkingV1alpha3Client) DestinationRules(namespace string) DestinationRuleInterface {
-	return newDestinationRules(c, namespace)
-}
-
-func (c *NetworkingV1alpha3Client) VirtualServices(namespace string) VirtualServiceInterface {
-	return newVirtualServices(c, namespace)
+func (c *NetworkingV1alpha3Client) MeshServices(namespace string) MeshServiceInterface {
+	return newMeshServices(c, namespace)
 }
 
 // NewForConfig creates a new NetworkingV1alpha3Client for the given config.

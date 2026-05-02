@@ -18,18 +18,10 @@
 
 package v1alpha3
 
-// DestinationRuleListerExpansion allows custom methods to be added to
-// DestinationRuleLister.
-type DestinationRuleListerExpansion interface{}
+// MeshServiceListerExpansion allows custom methods to be added to
+// MeshServiceLister.
+type MeshServiceListerExpansion interface{}
 
-// DestinationRuleNamespaceListerExpansion allows custom methods to be added to
-// DestinationRuleNamespaceLister.
-type DestinationRuleNamespaceListerExpansion interface{}
-
-// VirtualServiceListerExpansion allows custom methods to be added to
-// VirtualServiceLister.
-type VirtualServiceListerExpansion interface{}
-
-// VirtualServiceNamespaceListerExpansion allows custom methods to be added to
-// VirtualServiceNamespaceLister.
-type VirtualServiceNamespaceListerExpansion interface{}
+// MeshServiceNamespaceListerExpansion allows custom methods to be added to
+// MeshServiceNamespaceLister.
+type MeshServiceNamespaceListerExpansion interface{}

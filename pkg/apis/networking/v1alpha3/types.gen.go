@@ -27,24 +27,7 @@ import (
 //
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// DestinationRule defines policies that apply to traffic intended for a service
-// after routing has occurred.
-//
-// <!-- crd generation tags
-// +cue-gen:DestinationRule:groupName:networking.dubbo.apache.org
-// +cue-gen:DestinationRule:versions:v1alpha3
-// +cue-gen:DestinationRule:annotations:helm.sh/resource-policy=keep
-// +cue-gen:DestinationRule:labels:app=dubbo,chart=dubbo,heritage=Tiller,release=dubbo
-// +cue-gen:DestinationRule:subresource:status
-// +cue-gen:DestinationRule:scope:Namespaced
-// +cue-gen:DestinationRule:resource:categories=dubbo,networking,shortNames=dr
-// +cue-gen:DestinationRule:printerColumn:name=Host,type=string,JSONPath=.spec.host,description="The name of a service from the service registry"
-// +cue-gen:DestinationRule:printerColumn:name=Age,type=date,JSONPath=.metadata.creationTimestamp,description="CreationTimestamp is a timestamp
-// representing the server time when this object was created. It is not guaranteed to be set in happens-before order across separate operations.
-// Clients may not set this value. It is represented in RFC3339 form and is in UTC.
-// Populated by the system. Read-only. Null for lists. For more information, see [Kubernetes API Conventions](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#metadata)"
-// +cue-gen:DestinationRule:preserveUnknownFields:false
-// -->
+// MeshService combines route rules and traffic policies for service-to-service traffic.
 //
 // <!-- go code generation tags
 // +kubetype-gen
@@ -52,76 +35,24 @@ import (
 // +genclient
 // +k8s:deepcopy-gen=true
 // -->
-type DestinationRule struct {
+type MeshService struct {
 	v1.TypeMeta `json:",inline"`
 	// +optional
 	v1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 
 	// Spec defines the implementation of this definition.
 	// +optional
-	Spec networkingv1alpha3.DestinationRule `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
+	Spec networkingv1alpha3.MeshService `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
 
 	Status v1alpha1.DubboStatus `json:"status,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// DestinationRuleList is a collection of DestinationRules.
-type DestinationRuleList struct {
+// MeshServiceList is a collection of MeshServices.
+type MeshServiceList struct {
 	v1.TypeMeta `json:",inline"`
 	// +optional
 	v1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-	Items       []*DestinationRule `json:"items" protobuf:"bytes,2,rep,name=items"`
-}
-
-//
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-
-// VirtualService defines a set of traffic routing rules to apply when a host is
-// addressed. Each routing rule defines matching criteria for traffic of a specific
-// protocol. If the traffic is matched, then it is sent to a named destination service
-// (or subset/version of it) defined in the registry.
-//
-// <!-- crd generation tags
-// +cue-gen:VirtualService:groupName:networking.dubbo.apache.org
-// +cue-gen:VirtualService:versions:v1alpha3
-// +cue-gen:VirtualService:annotations:helm.sh/resource-policy=keep
-// +cue-gen:VirtualService:labels:app=dubbo,chart=dubbo,heritage=Tiller,release=dubbo
-// +cue-gen:VirtualService:subresource:status
-// +cue-gen:VirtualService:scope:Namespaced
-// +cue-gen:VirtualService:resource:categories=dubbo,networking,shortNames=vs
-// +cue-gen:VirtualService:printerColumn:name=Hosts,type=string,JSONPath=.spec.hosts,description="The destination hosts to which traffic is being sent"
-// +cue-gen:VirtualService:printerColumn:name=Age,type=date,JSONPath=.metadata.creationTimestamp,description="CreationTimestamp is a timestamp
-// representing the server time when this object was created. It is not guaranteed to be set in happens-before order across separate operations.
-// Clients may not set this value. It is represented in RFC3339 form and is in UTC.
-// Populated by the system. Read-only. Null for lists. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata"
-// +cue-gen:VirtualService:preserveUnknownFields:false
-// -->
-//
-// <!-- go code generation tags
-// +kubetype-gen
-// +kubetype-gen:groupVersion=networking.dubbo.apache.org/v1alpha3
-// +genclient
-// +k8s:deepcopy-gen=true
-// -->
-type VirtualService struct {
-	v1.TypeMeta `json:",inline"`
-	// +optional
-	v1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-
-	// Spec defines the implementation of this definition.
-	// +optional
-	Spec networkingv1alpha3.VirtualService `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
-
-	Status v1alpha1.DubboStatus `json:"status,omitempty"`
-}
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-
-// VirtualServiceList is a collection of VirtualServices.
-type VirtualServiceList struct {
-	v1.TypeMeta `json:",inline"`
-	// +optional
-	v1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-	Items       []*VirtualService `json:"items" protobuf:"bytes,2,rep,name=items"`
+	Items       []*MeshService `json:"items" protobuf:"bytes,2,rep,name=items"`
 }

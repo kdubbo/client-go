@@ -24,10 +24,8 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
-	// DestinationRules returns a DestinationRuleInformer.
-	DestinationRules() DestinationRuleInformer
-	// VirtualServices returns a VirtualServiceInformer.
-	VirtualServices() VirtualServiceInformer
+	// MeshServices returns a MeshServiceInformer.
+	MeshServices() MeshServiceInformer
 }
 
 type version struct {
@@ -41,12 +39,7 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
 }
 
-// DestinationRules returns a DestinationRuleInformer.
-func (v *version) DestinationRules() DestinationRuleInformer {
-	return &destinationRuleInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
-// VirtualServices returns a VirtualServiceInformer.
-func (v *version) VirtualServices() VirtualServiceInformer {
-	return &virtualServiceInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+// MeshServices returns a MeshServiceInformer.
+func (v *version) MeshServices() MeshServiceInformer {
+	return &meshServiceInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }

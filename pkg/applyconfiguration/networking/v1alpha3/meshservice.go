@@ -26,22 +26,22 @@ import (
 	types "k8s.io/apimachinery/pkg/types"
 )
 
-// VirtualServiceApplyConfiguration represents an declarative configuration of the VirtualService type for use
+// MeshServiceApplyConfiguration represents an declarative configuration of the MeshService type for use
 // with apply.
-type VirtualServiceApplyConfiguration struct {
+type MeshServiceApplyConfiguration struct {
 	v1.TypeMetaApplyConfiguration    `json:",inline"`
 	*v1.ObjectMetaApplyConfiguration `json:"metadata,omitempty"`
-	Spec                             *v1alpha3.VirtualService `json:"spec,omitempty"`
-	Status                           *v1alpha1.DubboStatus    `json:"status,omitempty"`
+	Spec                             *v1alpha3.MeshService `json:"spec,omitempty"`
+	Status                           *v1alpha1.DubboStatus `json:"status,omitempty"`
 }
 
-// VirtualService constructs an declarative configuration of the VirtualService type for use with
+// MeshService constructs an declarative configuration of the MeshService type for use with
 // apply.
-func VirtualService(name, namespace string) *VirtualServiceApplyConfiguration {
-	b := &VirtualServiceApplyConfiguration{}
+func MeshService(name, namespace string) *MeshServiceApplyConfiguration {
+	b := &MeshServiceApplyConfiguration{}
 	b.WithName(name)
 	b.WithNamespace(namespace)
-	b.WithKind("VirtualService")
+	b.WithKind("MeshService")
 	b.WithAPIVersion("networking.dubbo.apache.org/v1alpha3")
 	return b
 }
@@ -49,7 +49,7 @@ func VirtualService(name, namespace string) *VirtualServiceApplyConfiguration {
 // WithKind sets the Kind field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the Kind field is set to the value of the last call.
-func (b *VirtualServiceApplyConfiguration) WithKind(value string) *VirtualServiceApplyConfiguration {
+func (b *MeshServiceApplyConfiguration) WithKind(value string) *MeshServiceApplyConfiguration {
 	b.Kind = &value
 	return b
 }
@@ -57,7 +57,7 @@ func (b *VirtualServiceApplyConfiguration) WithKind(value string) *VirtualServic
 // WithAPIVersion sets the APIVersion field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the APIVersion field is set to the value of the last call.
-func (b *VirtualServiceApplyConfiguration) WithAPIVersion(value string) *VirtualServiceApplyConfiguration {
+func (b *MeshServiceApplyConfiguration) WithAPIVersion(value string) *MeshServiceApplyConfiguration {
 	b.APIVersion = &value
 	return b
 }
@@ -65,7 +65,7 @@ func (b *VirtualServiceApplyConfiguration) WithAPIVersion(value string) *Virtual
 // WithName sets the Name field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the Name field is set to the value of the last call.
-func (b *VirtualServiceApplyConfiguration) WithName(value string) *VirtualServiceApplyConfiguration {
+func (b *MeshServiceApplyConfiguration) WithName(value string) *MeshServiceApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
 	b.Name = &value
 	return b
@@ -74,7 +74,7 @@ func (b *VirtualServiceApplyConfiguration) WithName(value string) *VirtualServic
 // WithGenerateName sets the GenerateName field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the GenerateName field is set to the value of the last call.
-func (b *VirtualServiceApplyConfiguration) WithGenerateName(value string) *VirtualServiceApplyConfiguration {
+func (b *MeshServiceApplyConfiguration) WithGenerateName(value string) *MeshServiceApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
 	b.GenerateName = &value
 	return b
@@ -83,7 +83,7 @@ func (b *VirtualServiceApplyConfiguration) WithGenerateName(value string) *Virtu
 // WithNamespace sets the Namespace field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the Namespace field is set to the value of the last call.
-func (b *VirtualServiceApplyConfiguration) WithNamespace(value string) *VirtualServiceApplyConfiguration {
+func (b *MeshServiceApplyConfiguration) WithNamespace(value string) *MeshServiceApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
 	b.Namespace = &value
 	return b
@@ -92,7 +92,7 @@ func (b *VirtualServiceApplyConfiguration) WithNamespace(value string) *VirtualS
 // WithUID sets the UID field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the UID field is set to the value of the last call.
-func (b *VirtualServiceApplyConfiguration) WithUID(value types.UID) *VirtualServiceApplyConfiguration {
+func (b *MeshServiceApplyConfiguration) WithUID(value types.UID) *MeshServiceApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
 	b.UID = &value
 	return b
@@ -101,7 +101,7 @@ func (b *VirtualServiceApplyConfiguration) WithUID(value types.UID) *VirtualServ
 // WithResourceVersion sets the ResourceVersion field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the ResourceVersion field is set to the value of the last call.
-func (b *VirtualServiceApplyConfiguration) WithResourceVersion(value string) *VirtualServiceApplyConfiguration {
+func (b *MeshServiceApplyConfiguration) WithResourceVersion(value string) *MeshServiceApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
 	b.ResourceVersion = &value
 	return b
@@ -110,7 +110,7 @@ func (b *VirtualServiceApplyConfiguration) WithResourceVersion(value string) *Vi
 // WithGeneration sets the Generation field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the Generation field is set to the value of the last call.
-func (b *VirtualServiceApplyConfiguration) WithGeneration(value int64) *VirtualServiceApplyConfiguration {
+func (b *MeshServiceApplyConfiguration) WithGeneration(value int64) *MeshServiceApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
 	b.Generation = &value
 	return b
@@ -119,7 +119,7 @@ func (b *VirtualServiceApplyConfiguration) WithGeneration(value int64) *VirtualS
 // WithCreationTimestamp sets the CreationTimestamp field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the CreationTimestamp field is set to the value of the last call.
-func (b *VirtualServiceApplyConfiguration) WithCreationTimestamp(value metav1.Time) *VirtualServiceApplyConfiguration {
+func (b *MeshServiceApplyConfiguration) WithCreationTimestamp(value metav1.Time) *MeshServiceApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
 	b.CreationTimestamp = &value
 	return b
@@ -128,7 +128,7 @@ func (b *VirtualServiceApplyConfiguration) WithCreationTimestamp(value metav1.Ti
 // WithDeletionTimestamp sets the DeletionTimestamp field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the DeletionTimestamp field is set to the value of the last call.
-func (b *VirtualServiceApplyConfiguration) WithDeletionTimestamp(value metav1.Time) *VirtualServiceApplyConfiguration {
+func (b *MeshServiceApplyConfiguration) WithDeletionTimestamp(value metav1.Time) *MeshServiceApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
 	b.DeletionTimestamp = &value
 	return b
@@ -137,7 +137,7 @@ func (b *VirtualServiceApplyConfiguration) WithDeletionTimestamp(value metav1.Ti
 // WithDeletionGracePeriodSeconds sets the DeletionGracePeriodSeconds field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the DeletionGracePeriodSeconds field is set to the value of the last call.
-func (b *VirtualServiceApplyConfiguration) WithDeletionGracePeriodSeconds(value int64) *VirtualServiceApplyConfiguration {
+func (b *MeshServiceApplyConfiguration) WithDeletionGracePeriodSeconds(value int64) *MeshServiceApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
 	b.DeletionGracePeriodSeconds = &value
 	return b
@@ -147,7 +147,7 @@ func (b *VirtualServiceApplyConfiguration) WithDeletionGracePeriodSeconds(value 
 // and returns the receiver, so that objects can be build by chaining "With" function invocations.
 // If called multiple times, the entries provided by each call will be put on the Labels field,
 // overwriting an existing map entries in Labels field with the same key.
-func (b *VirtualServiceApplyConfiguration) WithLabels(entries map[string]string) *VirtualServiceApplyConfiguration {
+func (b *MeshServiceApplyConfiguration) WithLabels(entries map[string]string) *MeshServiceApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
 	if b.Labels == nil && len(entries) > 0 {
 		b.Labels = make(map[string]string, len(entries))
@@ -162,7 +162,7 @@ func (b *VirtualServiceApplyConfiguration) WithLabels(entries map[string]string)
 // and returns the receiver, so that objects can be build by chaining "With" function invocations.
 // If called multiple times, the entries provided by each call will be put on the Annotations field,
 // overwriting an existing map entries in Annotations field with the same key.
-func (b *VirtualServiceApplyConfiguration) WithAnnotations(entries map[string]string) *VirtualServiceApplyConfiguration {
+func (b *MeshServiceApplyConfiguration) WithAnnotations(entries map[string]string) *MeshServiceApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
 	if b.Annotations == nil && len(entries) > 0 {
 		b.Annotations = make(map[string]string, len(entries))
@@ -176,7 +176,7 @@ func (b *VirtualServiceApplyConfiguration) WithAnnotations(entries map[string]st
 // WithOwnerReferences adds the given value to the OwnerReferences field in the declarative configuration
 // and returns the receiver, so that objects can be build by chaining "With" function invocations.
 // If called multiple times, values provided by each call will be appended to the OwnerReferences field.
-func (b *VirtualServiceApplyConfiguration) WithOwnerReferences(values ...*v1.OwnerReferenceApplyConfiguration) *VirtualServiceApplyConfiguration {
+func (b *MeshServiceApplyConfiguration) WithOwnerReferences(values ...*v1.OwnerReferenceApplyConfiguration) *MeshServiceApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
 	for i := range values {
 		if values[i] == nil {
@@ -190,7 +190,7 @@ func (b *VirtualServiceApplyConfiguration) WithOwnerReferences(values ...*v1.Own
 // WithFinalizers adds the given value to the Finalizers field in the declarative configuration
 // and returns the receiver, so that objects can be build by chaining "With" function invocations.
 // If called multiple times, values provided by each call will be appended to the Finalizers field.
-func (b *VirtualServiceApplyConfiguration) WithFinalizers(values ...string) *VirtualServiceApplyConfiguration {
+func (b *MeshServiceApplyConfiguration) WithFinalizers(values ...string) *MeshServiceApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
 	for i := range values {
 		b.Finalizers = append(b.Finalizers, values[i])
@@ -198,7 +198,7 @@ func (b *VirtualServiceApplyConfiguration) WithFinalizers(values ...string) *Vir
 	return b
 }
 
-func (b *VirtualServiceApplyConfiguration) ensureObjectMetaApplyConfigurationExists() {
+func (b *MeshServiceApplyConfiguration) ensureObjectMetaApplyConfigurationExists() {
 	if b.ObjectMetaApplyConfiguration == nil {
 		b.ObjectMetaApplyConfiguration = &v1.ObjectMetaApplyConfiguration{}
 	}
@@ -207,7 +207,7 @@ func (b *VirtualServiceApplyConfiguration) ensureObjectMetaApplyConfigurationExi
 // WithSpec sets the Spec field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the Spec field is set to the value of the last call.
-func (b *VirtualServiceApplyConfiguration) WithSpec(value v1alpha3.VirtualService) *VirtualServiceApplyConfiguration {
+func (b *MeshServiceApplyConfiguration) WithSpec(value v1alpha3.MeshService) *MeshServiceApplyConfiguration {
 	b.Spec = &value
 	return b
 }
@@ -215,7 +215,7 @@ func (b *VirtualServiceApplyConfiguration) WithSpec(value v1alpha3.VirtualServic
 // WithStatus sets the Status field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the Status field is set to the value of the last call.
-func (b *VirtualServiceApplyConfiguration) WithStatus(value v1alpha1.DubboStatus) *VirtualServiceApplyConfiguration {
+func (b *MeshServiceApplyConfiguration) WithStatus(value v1alpha1.DubboStatus) *MeshServiceApplyConfiguration {
 	b.Status = &value
 	return b
 }

@@ -43,10 +43,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &metav1.TypeMetaApplyConfiguration{}
 
 		// Group=networking.dubbo.apache.org, Version=v1alpha3
-	case v1alpha3.SchemeGroupVersion.WithKind("DestinationRule"):
-		return &networkingv1alpha3.DestinationRuleApplyConfiguration{}
-	case v1alpha3.SchemeGroupVersion.WithKind("VirtualService"):
-		return &networkingv1alpha3.VirtualServiceApplyConfiguration{}
+	case v1alpha3.SchemeGroupVersion.WithKind("MeshService"):
+		return &networkingv1alpha3.MeshServiceApplyConfiguration{}
 
 		// Group=security.dubbo.apache.org, Version=v1alpha3
 	case securityv1alpha3.SchemeGroupVersion.WithKind("PeerAuthentication"):

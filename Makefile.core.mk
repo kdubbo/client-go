@@ -25,11 +25,11 @@ lister_gen = lister-gen
 informer_gen = informer-gen
 
 kube_dubbo_source_packages = $(subst $(space),$(empty), \
-    github.com/apache/dubbo-kubernetes/api/networking/v1alpha3, \
-    github.com/apache/dubbo-kubernetes/api/security/v1alpha3 \
+    github.com/kdubbo/api/networking/v1alpha3, \
+    github.com/kdubbo/api/security/v1alpha3 \
     )
 
-kube_base_output_package = github.com/apache/dubbo-kubernetes/client-go/pkg
+kube_base_output_package = github.com/kdubbo/client-go/pkg
 kube_api_base_package = $(kube_base_output_package)/apis
 
 kube_api_packages = $(subst $(space),$(empty), \
@@ -43,36 +43,26 @@ kube_clientset_name = versioned
 kube_listers_package = $(kube_base_output_package)/listers
 kube_informers_package = $(kube_base_output_package)/informers
 kube_applyconfiguration_package = $(kube_base_output_package)/applyconfiguration
-kube_go_header_text = client-go/header.go.txt
+kube_go_header_text = header.go.txt
 
 empty:=
 space := $(empty) $(empty)
 comma := ,
 
-ifeq ($(IN_BUILD_CONTAINER),1)
-	# k8s code generators rely on GOPATH, using $GOPATH/src as the base package
-	# directory.  Using --output-base . does not work, as that ends up generating
-	# code into ./<package>, e.g. ./client-go/pkg/apis/...  To work
-	# around this, we'll just let k8s generate the code where it wants and copy
-	# back to where it should have been generated.
-	move_generated=([ -d $(GOPATH)/src/$(kube_base_output_package)/ ] && cp -r $(GOPATH)/src/$(kube_base_output_package)/ client-go/ && rm -rf $(GOPATH)/src/$(kube_base_output_package)/) || true
-else
-	# nothing special for local builds
-	move_generated=
-endif
+move_generated=\
+	([ -d $(GOPATH)/src/$(kube_base_output_package)/ ] && mkdir -p pkg && cp -R $(GOPATH)/src/$(kube_base_output_package)/. pkg/ && rm -rf $(GOPATH)/src/$(kube_base_output_package)/) || true; \
+	([ -d github.com/kdubbo/client-go/pkg/ ] && mkdir -p pkg && cp -R github.com/kdubbo/client-go/pkg/. pkg/ && rm -rf github.com) || true
 
 rename_generated_files=\
-	cd client-go && find $(subst client-go/, $(empty), $(subst github.com/apache/dubbo-kubernetes/, $(empty), $(subst $(comma), $(space), $(kube_api_packages) $(kube_clientset_package) $(kube_listers_package) $(kube_informers_package)))) \
+	find $(subst github.com/kdubbo/client-go/, $(empty), $(subst $(comma), $(space), $(kube_api_packages) $(kube_clientset_package) $(kube_listers_package) $(kube_informers_package))) \
 	-name '*.go' -and -not -name 'doc.go' -and -not -name '*.gen.go' -type f -exec sh -c 'mv "$$1" "$${1%.go}".gen.go' - '{}' \; || true
 
 fixup_generated_files=\
-	find . -name "*.deepcopy.gen.go" -type f | xargs sed -i -e '/\*out = \*in/d'
+	find . -name "*.deepcopy.gen.go" -type f -exec perl -0pi -e 's/^.*\*out = \*in.*\n//mg' {} +
 
 .PHONY: generate-k8s-client
 generate-k8s-client:
-	# generate kube api type wrappers for dubbo types
-	@GODEBUG=gotypesalias=0 $(kubetype_gen) --input-dirs $(kube_dubbo_source_packages) --output-package $(kube_api_base_package) -h $(kube_go_header_text)
-	@$(move_generated)
+	# use checked-in kube api type wrappers for dubbo types
 	# generate deepcopy for kube api types
 	@$(deepcopy_gen) --input-dirs $(kube_api_packages) -O zz_generated.deepcopy  -h $(kube_go_header_text)
 	# generate ssa for kube api types
@@ -90,4 +80,5 @@ generate-k8s-client:
 .PHONY: clean-k8s-client
 clean-k8s-client:
     # remove generated code
-	@rm -rf client-go/pkg
+	@rm -rf pkg/applyconfiguration pkg/clientset pkg/informers pkg/listers
+	@find pkg/apis -name 'zz_generated.deepcopy.gen.go' -delete 2>/dev/null || true

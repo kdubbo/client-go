@@ -26,30 +26,8 @@ import (
 
 //
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-
-// <!-- crd generation tags
-// +cue-gen:PeerAuthentication:groupName:security.dubbo.apache.org
-// +cue-gen:PeerAuthentication:versions:v1alpha3
-// +cue-gen:PeerAuthentication:storageVersion
-// +cue-gen:PeerAuthentication:annotations:helm.sh/resource-policy=keep
-// +cue-gen:PeerAuthentication:labels:app=dubbo,chart=dubbo,dubbo=security,heritage=Tiller,release=dubbo
-// +cue-gen:PeerAuthentication:subresource:status
-// +cue-gen:PeerAuthentication:scope:Namespaced
-// +cue-gen:PeerAuthentication:resource:categories=dubbo,security,shortNames=pa
-// +cue-gen:PeerAuthentication:preserveUnknownFields:false
-// +cue-gen:PeerAuthentication:printerColumn:name=Mode,type=string,JSONPath=.spec.mtls.mode,description="Defines the mTLS mode used for peer authentication."
-// +cue-gen:PeerAuthentication:printerColumn:name=Age,type=date,JSONPath=.metadata.creationTimestamp,description="CreationTimestamp is a timestamp
-// representing the server time when this object was created. It is not guaranteed to be set in happens-before order across separate operations.
-// Clients may not set this value. It is represented in RFC3339 form and is in UTC.
-// Populated by the system. Read-only. Null for lists. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata"
-// -->
-//
-// <!-- go code generation tags
-// +kubetype-gen
-// +kubetype-gen:groupVersion=security.dubbo.apache.org/v1alpha3
 // +genclient
-// +k8s:deepcopy-gen=true
-// -->
+
 // +kubebuilder:validation:XValidation:message="portLevelMtls requires selector",rule="has(self.portLevelMtls) ? self.index({}, selector, matchLabels).size() > 0 : true"
 type PeerAuthentication struct {
 	v1.TypeMeta `json:",inline"`
