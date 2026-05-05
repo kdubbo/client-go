@@ -14,7 +14,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package fake
+package v1alpha3_test
 
 import (
 	"context"
@@ -22,12 +22,13 @@ import (
 
 	apinetworking "github.com/kdubbo/api/networking/v1alpha3"
 	networking "github.com/kdubbo/client-go/pkg/apis/networking/v1alpha3"
+	"github.com/kdubbo/client-go/pkg/clientset/versioned/fake"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func TestMeshServiceClientCRUD(t *testing.T) {
 	ctx := context.Background()
-	client := NewSimpleClientset()
+	client := fake.NewSimpleClientset()
 	meshServices := client.NetworkingV1alpha3().MeshServices("app")
 
 	created, err := meshServices.Create(ctx, &networking.MeshService{
