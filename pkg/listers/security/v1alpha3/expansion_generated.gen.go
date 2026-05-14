@@ -18,6 +18,14 @@
 
 package v1alpha3
 
+// AuthorizationPolicyListerExpansion allows custom methods to be added to
+// AuthorizationPolicyLister.
+type AuthorizationPolicyListerExpansion interface{}
+
+// AuthorizationPolicyNamespaceListerExpansion allows custom methods to be added to
+// AuthorizationPolicyNamespaceLister.
+type AuthorizationPolicyNamespaceListerExpansion interface{}
+
 // PeerAuthenticationListerExpansion allows custom methods to be added to
 // PeerAuthenticationLister.
 type PeerAuthenticationListerExpansion interface{}
@@ -25,3 +33,11 @@ type PeerAuthenticationListerExpansion interface{}
 // PeerAuthenticationNamespaceListerExpansion allows custom methods to be added to
 // PeerAuthenticationNamespaceLister.
 type PeerAuthenticationNamespaceListerExpansion interface{}
+
+// RequestAuthenticationListerExpansion allows custom methods to be added to
+// RequestAuthenticationLister.
+type RequestAuthenticationListerExpansion interface{}
+
+// RequestAuthenticationNamespaceListerExpansion allows custom methods to be added to
+// RequestAuthenticationNamespaceLister.
+type RequestAuthenticationNamespaceListerExpansion interface{}

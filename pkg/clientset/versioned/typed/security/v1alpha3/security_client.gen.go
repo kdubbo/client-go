@@ -28,7 +28,9 @@ import (
 
 type SecurityV1alpha3Interface interface {
 	RESTClient() rest.Interface
+	AuthorizationPoliciesGetter
 	PeerAuthenticationsGetter
+	RequestAuthenticationsGetter
 }
 
 // SecurityV1alpha3Client is used to interact with features provided by the security.dubbo.apache.org group.
@@ -36,8 +38,16 @@ type SecurityV1alpha3Client struct {
 	restClient rest.Interface
 }
 
+func (c *SecurityV1alpha3Client) AuthorizationPolicies(namespace string) AuthorizationPolicyInterface {
+	return newAuthorizationPolicies(c, namespace)
+}
+
 func (c *SecurityV1alpha3Client) PeerAuthentications(namespace string) PeerAuthenticationInterface {
 	return newPeerAuthentications(c, namespace)
+}
+
+func (c *SecurityV1alpha3Client) RequestAuthentications(namespace string) RequestAuthenticationInterface {
+	return newRequestAuthentications(c, namespace)
 }
 
 // NewForConfig creates a new SecurityV1alpha3Client for the given config.

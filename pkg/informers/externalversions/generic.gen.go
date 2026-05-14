@@ -58,8 +58,12 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Networking().V1alpha3().MeshServices().Informer()}, nil
 
 		// Group=security.dubbo.apache.org, Version=v1alpha3
+	case securityv1alpha3.SchemeGroupVersion.WithResource("authorizationpolicies"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Security().V1alpha3().AuthorizationPolicies().Informer()}, nil
 	case securityv1alpha3.SchemeGroupVersion.WithResource("peerauthentications"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Security().V1alpha3().PeerAuthentications().Informer()}, nil
+	case securityv1alpha3.SchemeGroupVersion.WithResource("requestauthentications"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Security().V1alpha3().RequestAuthentications().Informer()}, nil
 
 	}
 

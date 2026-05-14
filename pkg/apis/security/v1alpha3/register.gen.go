@@ -43,8 +43,12 @@ func Resource(resource string) schema.GroupResource {
 
 func addKnownTypes(scheme *runtime.Scheme) error {
 	scheme.AddKnownTypes(SchemeGroupVersion,
+		&AuthorizationPolicy{},
+		&AuthorizationPolicyList{},
 		&PeerAuthentication{},
 		&PeerAuthenticationList{},
+		&RequestAuthentication{},
+		&RequestAuthenticationList{},
 	)
 	v1.AddToGroupVersion(scheme, SchemeGroupVersion)
 	return nil

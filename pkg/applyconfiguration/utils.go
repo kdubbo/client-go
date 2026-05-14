@@ -38,8 +38,12 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &networkingv1alpha3.MeshServiceApplyConfiguration{}
 
 		// Group=security.dubbo.apache.org, Version=v1alpha3
+	case securityv1alpha3.SchemeGroupVersion.WithKind("AuthorizationPolicy"):
+		return &applyconfigurationsecurityv1alpha3.AuthorizationPolicyApplyConfiguration{}
 	case securityv1alpha3.SchemeGroupVersion.WithKind("PeerAuthentication"):
 		return &applyconfigurationsecurityv1alpha3.PeerAuthenticationApplyConfiguration{}
+	case securityv1alpha3.SchemeGroupVersion.WithKind("RequestAuthentication"):
+		return &applyconfigurationsecurityv1alpha3.RequestAuthenticationApplyConfiguration{}
 
 	}
 	return nil

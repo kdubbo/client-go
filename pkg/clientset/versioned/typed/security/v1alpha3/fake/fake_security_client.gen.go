@@ -28,8 +28,16 @@ type FakeSecurityV1alpha3 struct {
 	*testing.Fake
 }
 
+func (c *FakeSecurityV1alpha3) AuthorizationPolicies(namespace string) v1alpha3.AuthorizationPolicyInterface {
+	return newFakeAuthorizationPolicies(c, namespace)
+}
+
 func (c *FakeSecurityV1alpha3) PeerAuthentications(namespace string) v1alpha3.PeerAuthenticationInterface {
 	return newFakePeerAuthentications(c, namespace)
+}
+
+func (c *FakeSecurityV1alpha3) RequestAuthentications(namespace string) v1alpha3.RequestAuthenticationInterface {
+	return newFakeRequestAuthentications(c, namespace)
 }
 
 // RESTClient returns a RESTClient that is used to communicate

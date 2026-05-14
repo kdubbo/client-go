@@ -28,6 +28,32 @@ import (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +genclient
 
+type AuthorizationPolicy struct {
+	v1.TypeMeta `json:",inline"`
+	// +optional
+	v1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+
+	// Spec defines the implementation of this definition.
+	// +optional
+	Spec securityv1alpha3.AuthorizationPolicy `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
+
+	Status v1alpha1.DubboStatus `json:"status,omitempty"`
+}
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// AuthorizationPolicyList is a collection of AuthorizationPolicies.
+type AuthorizationPolicyList struct {
+	v1.TypeMeta `json:",inline"`
+	// +optional
+	v1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	Items       []*AuthorizationPolicy `json:"items" protobuf:"bytes,2,rep,name=items"`
+}
+
+//
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +genclient
+
 // +kubebuilder:validation:XValidation:message="portLevelMtls requires selector",rule="has(self.portLevelMtls) ? self.index({}, selector, matchLabels).size() > 0 : true"
 type PeerAuthentication struct {
 	v1.TypeMeta `json:",inline"`
@@ -49,4 +75,30 @@ type PeerAuthenticationList struct {
 	// +optional
 	v1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 	Items       []*PeerAuthentication `json:"items" protobuf:"bytes,2,rep,name=items"`
+}
+
+//
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +genclient
+
+type RequestAuthentication struct {
+	v1.TypeMeta `json:",inline"`
+	// +optional
+	v1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+
+	// Spec defines the implementation of this definition.
+	// +optional
+	Spec securityv1alpha3.RequestAuthentication `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
+
+	Status v1alpha1.DubboStatus `json:"status,omitempty"`
+}
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// RequestAuthenticationList is a collection of RequestAuthentications.
+type RequestAuthenticationList struct {
+	v1.TypeMeta `json:",inline"`
+	// +optional
+	v1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	Items       []*RequestAuthentication `json:"items" protobuf:"bytes,2,rep,name=items"`
 }
