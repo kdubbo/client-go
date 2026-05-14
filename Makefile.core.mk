@@ -36,6 +36,7 @@ kube_api_packages = $(subst $(space),$(empty), \
     $(kube_api_base_package)/networking/v1alpha3, \
     $(kube_api_base_package)/security/v1alpha3 \
     )
+kube_api_package_list = $(subst $(comma),$(space),$(kube_api_packages))
 
 kube_api_applyconfiguration_packages = $(kube_api_packages),k8s.io/apimachinery/pkg/apis/meta/v1
 kube_clientset_package = $(kube_base_output_package)/clientset
@@ -58,21 +59,22 @@ rename_generated_files=\
 	-name '*.go' -and -not -name 'doc.go' -and -not -name '*.gen.go' -type f -exec sh -c 'mv "$$1" "$${1%.go}".gen.go' - '{}' \; || true
 
 fixup_generated_files=\
-	find . -name "*.deepcopy.gen.go" -type f -exec perl -0pi -e 's/^.*\*out = \*in.*\n//mg' {} +
+	find . -name "*.deepcopy.gen.go" -type f -exec perl -0pi -e 's/^.*\*out = \*in.*\n//mg' {} +; \
+	find pkg/clientset -path '*/fake/fake_*.gen.go' -type f -exec perl -0pi -e 's/return gentype\.ToPointerSlice\(list\.Items\)/return list.Items/g; s/list\.Items = gentype\.FromPointerSlice\(items\)/list.Items = items/g' {} +
 
 .PHONY: generate-k8s-client
 generate-k8s-client:
 	# use checked-in kube api type wrappers for dubbo types
 	# generate deepcopy for kube api types
-	@$(deepcopy_gen) --input-dirs $(kube_api_packages) -O zz_generated.deepcopy  -h $(kube_go_header_text)
+	@$(deepcopy_gen) --output-file zz_generated.deepcopy.gen.go --go-header-file $(kube_go_header_text) $(kube_api_package_list)
 	# generate ssa for kube api types
-	@$(applyconfiguration_gen) --input-dirs $(kube_api_applyconfiguration_packages) --output-package $(kube_applyconfiguration_package) -h $(kube_go_header_text)
+	@$(applyconfiguration_gen) --output-dir pkg/applyconfiguration --output-pkg $(kube_applyconfiguration_package) --go-header-file $(kube_go_header_text) $(kube_api_package_list)
 	# generate clientsets for kube api types
-	@$(client_gen) --clientset-name $(kube_clientset_name) --input-base "" --input  $(kube_api_packages) --output-package $(kube_clientset_package) -h $(kube_go_header_text) --apply-configuration-package $(kube_applyconfiguration_package)
+	@$(client_gen) --clientset-name $(kube_clientset_name) --input-base "" --input $(kube_api_packages) --output-dir pkg/clientset --output-pkg $(kube_clientset_package) --go-header-file $(kube_go_header_text) --apply-configuration-package $(kube_applyconfiguration_package)
 	# generate listers for kube api types
-	@$(lister_gen) --input-dirs $(kube_api_packages) --output-package $(kube_listers_package) -h $(kube_go_header_text)
+	@$(lister_gen) --output-dir pkg/listers --output-pkg $(kube_listers_package) --go-header-file $(kube_go_header_text) $(kube_api_package_list)
 	# generate informers for kube api types
-	@$(informer_gen) --input-dirs $(kube_api_packages) --versioned-clientset-package $(kube_clientset_package)/$(kube_clientset_name) --listers-package $(kube_listers_package) --output-package $(kube_informers_package) -h $(kube_go_header_text)
+	@$(informer_gen) --output-dir pkg/informers --output-pkg $(kube_informers_package) --versioned-clientset-package $(kube_clientset_package)/$(kube_clientset_name) --listers-package $(kube_listers_package) --go-header-file $(kube_go_header_text) $(kube_api_package_list)
 	@$(move_generated)
 	@$(rename_generated_files)
 	@$(fixup_generated_files)

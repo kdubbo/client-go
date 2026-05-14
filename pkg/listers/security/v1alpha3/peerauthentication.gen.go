@@ -19,10 +19,10 @@
 package v1alpha3
 
 import (
-	v1alpha3 "github.com/kdubbo/client-go/pkg/apis/security/v1alpha3"
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	securityv1alpha3 "github.com/kdubbo/client-go/pkg/apis/security/v1alpha3"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // PeerAuthenticationLister helps list PeerAuthentications.
@@ -30,7 +30,7 @@ import (
 type PeerAuthenticationLister interface {
 	// List lists all PeerAuthentications in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha3.PeerAuthentication, err error)
+	List(selector labels.Selector) (ret []*securityv1alpha3.PeerAuthentication, err error)
 	// PeerAuthentications returns an object that can list and get PeerAuthentications.
 	PeerAuthentications(namespace string) PeerAuthenticationNamespaceLister
 	PeerAuthenticationListerExpansion
@@ -38,25 +38,17 @@ type PeerAuthenticationLister interface {
 
 // peerAuthenticationLister implements the PeerAuthenticationLister interface.
 type peerAuthenticationLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*securityv1alpha3.PeerAuthentication]
 }
 
 // NewPeerAuthenticationLister returns a new PeerAuthenticationLister.
 func NewPeerAuthenticationLister(indexer cache.Indexer) PeerAuthenticationLister {
-	return &peerAuthenticationLister{indexer: indexer}
-}
-
-// List lists all PeerAuthentications in the indexer.
-func (s *peerAuthenticationLister) List(selector labels.Selector) (ret []*v1alpha3.PeerAuthentication, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha3.PeerAuthentication))
-	})
-	return ret, err
+	return &peerAuthenticationLister{listers.New[*securityv1alpha3.PeerAuthentication](indexer, securityv1alpha3.Resource("peerauthentication"))}
 }
 
 // PeerAuthentications returns an object that can list and get PeerAuthentications.
 func (s *peerAuthenticationLister) PeerAuthentications(namespace string) PeerAuthenticationNamespaceLister {
-	return peerAuthenticationNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return peerAuthenticationNamespaceLister{listers.NewNamespaced[*securityv1alpha3.PeerAuthentication](s.ResourceIndexer, namespace)}
 }
 
 // PeerAuthenticationNamespaceLister helps list and get PeerAuthentications.
@@ -64,36 +56,15 @@ func (s *peerAuthenticationLister) PeerAuthentications(namespace string) PeerAut
 type PeerAuthenticationNamespaceLister interface {
 	// List lists all PeerAuthentications in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha3.PeerAuthentication, err error)
+	List(selector labels.Selector) (ret []*securityv1alpha3.PeerAuthentication, err error)
 	// Get retrieves the PeerAuthentication from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha3.PeerAuthentication, error)
+	Get(name string) (*securityv1alpha3.PeerAuthentication, error)
 	PeerAuthenticationNamespaceListerExpansion
 }
 
 // peerAuthenticationNamespaceLister implements the PeerAuthenticationNamespaceLister
 // interface.
 type peerAuthenticationNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all PeerAuthentications in the indexer for a given namespace.
-func (s peerAuthenticationNamespaceLister) List(selector labels.Selector) (ret []*v1alpha3.PeerAuthentication, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha3.PeerAuthentication))
-	})
-	return ret, err
-}
-
-// Get retrieves the PeerAuthentication from the indexer for a given namespace and name.
-func (s peerAuthenticationNamespaceLister) Get(name string) (*v1alpha3.PeerAuthentication, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha3.Resource("peerauthentication"), name)
-	}
-	return obj.(*v1alpha3.PeerAuthentication), nil
+	listers.ResourceIndexer[*securityv1alpha3.PeerAuthentication]
 }

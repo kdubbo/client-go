@@ -19,18 +19,15 @@
 package v1alpha3
 
 import (
-	"context"
-	json "encoding/json"
-	"fmt"
-	"time"
+	context "context"
 
-	v1alpha3 "github.com/kdubbo/client-go/pkg/apis/networking/v1alpha3"
-	networkingv1alpha3 "github.com/kdubbo/client-go/pkg/applyconfiguration/networking/v1alpha3"
+	networkingv1alpha3 "github.com/kdubbo/client-go/pkg/apis/networking/v1alpha3"
+	applyconfigurationnetworkingv1alpha3 "github.com/kdubbo/client-go/pkg/applyconfiguration/networking/v1alpha3"
 	scheme "github.com/kdubbo/client-go/pkg/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
-	rest "k8s.io/client-go/rest"
+	gentype "k8s.io/client-go/gentype"
 )
 
 // MeshServicesGetter has a method to return a MeshServiceInterface.
@@ -41,216 +38,37 @@ type MeshServicesGetter interface {
 
 // MeshServiceInterface has methods to work with MeshService resources.
 type MeshServiceInterface interface {
-	Create(ctx context.Context, meshService *v1alpha3.MeshService, opts v1.CreateOptions) (*v1alpha3.MeshService, error)
-	Update(ctx context.Context, meshService *v1alpha3.MeshService, opts v1.UpdateOptions) (*v1alpha3.MeshService, error)
-	UpdateStatus(ctx context.Context, meshService *v1alpha3.MeshService, opts v1.UpdateOptions) (*v1alpha3.MeshService, error)
+	Create(ctx context.Context, meshService *networkingv1alpha3.MeshService, opts v1.CreateOptions) (*networkingv1alpha3.MeshService, error)
+	Update(ctx context.Context, meshService *networkingv1alpha3.MeshService, opts v1.UpdateOptions) (*networkingv1alpha3.MeshService, error)
+	// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+	UpdateStatus(ctx context.Context, meshService *networkingv1alpha3.MeshService, opts v1.UpdateOptions) (*networkingv1alpha3.MeshService, error)
 	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
 	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
-	Get(ctx context.Context, name string, opts v1.GetOptions) (*v1alpha3.MeshService, error)
-	List(ctx context.Context, opts v1.ListOptions) (*v1alpha3.MeshServiceList, error)
+	Get(ctx context.Context, name string, opts v1.GetOptions) (*networkingv1alpha3.MeshService, error)
+	List(ctx context.Context, opts v1.ListOptions) (*networkingv1alpha3.MeshServiceList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
-	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha3.MeshService, err error)
-	Apply(ctx context.Context, meshService *networkingv1alpha3.MeshServiceApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha3.MeshService, err error)
-	ApplyStatus(ctx context.Context, meshService *networkingv1alpha3.MeshServiceApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha3.MeshService, err error)
+	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *networkingv1alpha3.MeshService, err error)
+	Apply(ctx context.Context, meshService *applyconfigurationnetworkingv1alpha3.MeshServiceApplyConfiguration, opts v1.ApplyOptions) (result *networkingv1alpha3.MeshService, err error)
+	// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
+	ApplyStatus(ctx context.Context, meshService *applyconfigurationnetworkingv1alpha3.MeshServiceApplyConfiguration, opts v1.ApplyOptions) (result *networkingv1alpha3.MeshService, err error)
 	MeshServiceExpansion
 }
 
 // meshServices implements MeshServiceInterface
 type meshServices struct {
-	client rest.Interface
-	ns     string
+	*gentype.ClientWithListAndApply[*networkingv1alpha3.MeshService, *networkingv1alpha3.MeshServiceList, *applyconfigurationnetworkingv1alpha3.MeshServiceApplyConfiguration]
 }
 
 // newMeshServices returns a MeshServices
 func newMeshServices(c *NetworkingV1alpha3Client, namespace string) *meshServices {
 	return &meshServices{
-		client: c.RESTClient(),
-		ns:     namespace,
+		gentype.NewClientWithListAndApply[*networkingv1alpha3.MeshService, *networkingv1alpha3.MeshServiceList, *applyconfigurationnetworkingv1alpha3.MeshServiceApplyConfiguration](
+			"meshservices",
+			c.RESTClient(),
+			scheme.ParameterCodec,
+			namespace,
+			func() *networkingv1alpha3.MeshService { return &networkingv1alpha3.MeshService{} },
+			func() *networkingv1alpha3.MeshServiceList { return &networkingv1alpha3.MeshServiceList{} },
+		),
 	}
-}
-
-// Get takes name of the meshService, and returns the corresponding meshService object, and an error if there is any.
-func (c *meshServices) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha3.MeshService, err error) {
-	result = &v1alpha3.MeshService{}
-	err = c.client.Get().
-		Namespace(c.ns).
-		Resource("meshservices").
-		Name(name).
-		VersionedParams(&options, scheme.ParameterCodec).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// List takes label and field selectors, and returns the list of MeshServices that match those selectors.
-func (c *meshServices) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha3.MeshServiceList, err error) {
-	var timeout time.Duration
-	if opts.TimeoutSeconds != nil {
-		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
-	}
-	result = &v1alpha3.MeshServiceList{}
-	err = c.client.Get().
-		Namespace(c.ns).
-		Resource("meshservices").
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Timeout(timeout).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// Watch returns a watch.Interface that watches the requested meshServices.
-func (c *meshServices) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	var timeout time.Duration
-	if opts.TimeoutSeconds != nil {
-		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
-	}
-	opts.Watch = true
-	return c.client.Get().
-		Namespace(c.ns).
-		Resource("meshservices").
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Timeout(timeout).
-		Watch(ctx)
-}
-
-// Create takes the representation of a meshService and creates it.  Returns the server's representation of the meshService, and an error, if there is any.
-func (c *meshServices) Create(ctx context.Context, meshService *v1alpha3.MeshService, opts v1.CreateOptions) (result *v1alpha3.MeshService, err error) {
-	result = &v1alpha3.MeshService{}
-	err = c.client.Post().
-		Namespace(c.ns).
-		Resource("meshservices").
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(meshService).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// Update takes the representation of a meshService and updates it. Returns the server's representation of the meshService, and an error, if there is any.
-func (c *meshServices) Update(ctx context.Context, meshService *v1alpha3.MeshService, opts v1.UpdateOptions) (result *v1alpha3.MeshService, err error) {
-	result = &v1alpha3.MeshService{}
-	err = c.client.Put().
-		Namespace(c.ns).
-		Resource("meshservices").
-		Name(meshService.Name).
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(meshService).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *meshServices) UpdateStatus(ctx context.Context, meshService *v1alpha3.MeshService, opts v1.UpdateOptions) (result *v1alpha3.MeshService, err error) {
-	result = &v1alpha3.MeshService{}
-	err = c.client.Put().
-		Namespace(c.ns).
-		Resource("meshservices").
-		Name(meshService.Name).
-		SubResource("status").
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(meshService).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// Delete takes name of the meshService and deletes it. Returns an error if one occurs.
-func (c *meshServices) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	return c.client.Delete().
-		Namespace(c.ns).
-		Resource("meshservices").
-		Name(name).
-		Body(&opts).
-		Do(ctx).
-		Error()
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *meshServices) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	var timeout time.Duration
-	if listOpts.TimeoutSeconds != nil {
-		timeout = time.Duration(*listOpts.TimeoutSeconds) * time.Second
-	}
-	return c.client.Delete().
-		Namespace(c.ns).
-		Resource("meshservices").
-		VersionedParams(&listOpts, scheme.ParameterCodec).
-		Timeout(timeout).
-		Body(&opts).
-		Do(ctx).
-		Error()
-}
-
-// Patch applies the patch and returns the patched meshService.
-func (c *meshServices) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha3.MeshService, err error) {
-	result = &v1alpha3.MeshService{}
-	err = c.client.Patch(pt).
-		Namespace(c.ns).
-		Resource("meshservices").
-		Name(name).
-		SubResource(subresources...).
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(data).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// Apply takes the given apply declarative configuration, applies it and returns the applied meshService.
-func (c *meshServices) Apply(ctx context.Context, meshService *networkingv1alpha3.MeshServiceApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha3.MeshService, err error) {
-	if meshService == nil {
-		return nil, fmt.Errorf("meshService provided to Apply must not be nil")
-	}
-	patchOpts := opts.ToPatchOptions()
-	data, err := json.Marshal(meshService)
-	if err != nil {
-		return nil, err
-	}
-	name := meshService.Name
-	if name == nil {
-		return nil, fmt.Errorf("meshService.Name must be provided to Apply")
-	}
-	result = &v1alpha3.MeshService{}
-	err = c.client.Patch(types.ApplyPatchType).
-		Namespace(c.ns).
-		Resource("meshservices").
-		Name(*name).
-		VersionedParams(&patchOpts, scheme.ParameterCodec).
-		Body(data).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// ApplyStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
-func (c *meshServices) ApplyStatus(ctx context.Context, meshService *networkingv1alpha3.MeshServiceApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha3.MeshService, err error) {
-	if meshService == nil {
-		return nil, fmt.Errorf("meshService provided to Apply must not be nil")
-	}
-	patchOpts := opts.ToPatchOptions()
-	data, err := json.Marshal(meshService)
-	if err != nil {
-		return nil, err
-	}
-
-	name := meshService.Name
-	if name == nil {
-		return nil, fmt.Errorf("meshService.Name must be provided to Apply")
-	}
-
-	result = &v1alpha3.MeshService{}
-	err = c.client.Patch(types.ApplyPatchType).
-		Namespace(c.ns).
-		Resource("meshservices").
-		Name(*name).
-		SubResource("status").
-		VersionedParams(&patchOpts, scheme.ParameterCodec).
-		Body(data).
-		Do(ctx).
-		Into(result)
-	return
 }

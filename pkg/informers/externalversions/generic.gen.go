@@ -19,7 +19,7 @@
 package externalversions
 
 import (
-	"fmt"
+	fmt "fmt"
 
 	v1alpha3 "github.com/kdubbo/client-go/pkg/apis/networking/v1alpha3"
 	securityv1alpha3 "github.com/kdubbo/client-go/pkg/apis/security/v1alpha3"

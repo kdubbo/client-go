@@ -21,28 +21,19 @@ package applyconfiguration
 import (
 	v1alpha3 "github.com/kdubbo/client-go/pkg/apis/networking/v1alpha3"
 	securityv1alpha3 "github.com/kdubbo/client-go/pkg/apis/security/v1alpha3"
-	metav1 "github.com/kdubbo/client-go/pkg/applyconfiguration/meta/v1"
+	internal "github.com/kdubbo/client-go/pkg/applyconfiguration/internal"
 	networkingv1alpha3 "github.com/kdubbo/client-go/pkg/applyconfiguration/networking/v1alpha3"
 	applyconfigurationsecurityv1alpha3 "github.com/kdubbo/client-go/pkg/applyconfiguration/security/v1alpha3"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	runtime "k8s.io/apimachinery/pkg/runtime"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
+	managedfields "k8s.io/apimachinery/pkg/util/managedfields"
 )
 
 // ForKind returns an apply configuration type for the given GroupVersionKind, or nil if no
 // apply configuration type exists for the given GroupVersionKind.
 func ForKind(kind schema.GroupVersionKind) interface{} {
 	switch kind {
-	// Group=meta.k8s.io, Version=v1
-	case v1.SchemeGroupVersion.WithKind("ManagedFieldsEntry"):
-		return &metav1.ManagedFieldsEntryApplyConfiguration{}
-	case v1.SchemeGroupVersion.WithKind("ObjectMeta"):
-		return &metav1.ObjectMetaApplyConfiguration{}
-	case v1.SchemeGroupVersion.WithKind("OwnerReference"):
-		return &metav1.OwnerReferenceApplyConfiguration{}
-	case v1.SchemeGroupVersion.WithKind("TypeMeta"):
-		return &metav1.TypeMetaApplyConfiguration{}
-
-		// Group=networking.dubbo.apache.org, Version=v1alpha3
+	// Group=networking.dubbo.apache.org, Version=v1alpha3
 	case v1alpha3.SchemeGroupVersion.WithKind("MeshService"):
 		return &networkingv1alpha3.MeshServiceApplyConfiguration{}
 
@@ -52,4 +43,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 
 	}
 	return nil
+}
+
+func NewTypeConverter(scheme *runtime.Scheme) managedfields.TypeConverter {
+	return managedfields.NewSchemeTypeConverter(scheme, internal.Parser())
 }

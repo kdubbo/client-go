@@ -19,171 +19,35 @@
 package fake
 
 import (
-	"context"
-	json "encoding/json"
-	"fmt"
-
 	v1alpha3 "github.com/kdubbo/client-go/pkg/apis/networking/v1alpha3"
 	networkingv1alpha3 "github.com/kdubbo/client-go/pkg/applyconfiguration/networking/v1alpha3"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	typednetworkingv1alpha3 "github.com/kdubbo/client-go/pkg/clientset/versioned/typed/networking/v1alpha3"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeMeshServices implements MeshServiceInterface
-type FakeMeshServices struct {
+// fakeMeshServices implements MeshServiceInterface
+type fakeMeshServices struct {
+	*gentype.FakeClientWithListAndApply[*v1alpha3.MeshService, *v1alpha3.MeshServiceList, *networkingv1alpha3.MeshServiceApplyConfiguration]
 	Fake *FakeNetworkingV1alpha3
-	ns   string
 }
 
-var meshservicesResource = v1alpha3.SchemeGroupVersion.WithResource("meshservices")
-
-var meshservicesKind = v1alpha3.SchemeGroupVersion.WithKind("MeshService")
-
-// Get takes name of the meshService, and returns the corresponding meshService object, and an error if there is any.
-func (c *FakeMeshServices) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha3.MeshService, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(meshservicesResource, c.ns, name), &v1alpha3.MeshService{})
-
-	if obj == nil {
-		return nil, err
+func newFakeMeshServices(fake *FakeNetworkingV1alpha3, namespace string) typednetworkingv1alpha3.MeshServiceInterface {
+	return &fakeMeshServices{
+		gentype.NewFakeClientWithListAndApply[*v1alpha3.MeshService, *v1alpha3.MeshServiceList, *networkingv1alpha3.MeshServiceApplyConfiguration](
+			fake.Fake,
+			namespace,
+			v1alpha3.SchemeGroupVersion.WithResource("meshservices"),
+			v1alpha3.SchemeGroupVersion.WithKind("MeshService"),
+			func() *v1alpha3.MeshService { return &v1alpha3.MeshService{} },
+			func() *v1alpha3.MeshServiceList { return &v1alpha3.MeshServiceList{} },
+			func(dst, src *v1alpha3.MeshServiceList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha3.MeshServiceList) []*v1alpha3.MeshService {
+				return list.Items
+			},
+			func(list *v1alpha3.MeshServiceList, items []*v1alpha3.MeshService) {
+				list.Items = items
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha3.MeshService), err
-}
-
-// List takes label and field selectors, and returns the list of MeshServices that match those selectors.
-func (c *FakeMeshServices) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha3.MeshServiceList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(meshservicesResource, meshservicesKind, c.ns, opts), &v1alpha3.MeshServiceList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha3.MeshServiceList{ListMeta: obj.(*v1alpha3.MeshServiceList).ListMeta}
-	for _, item := range obj.(*v1alpha3.MeshServiceList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested meshServices.
-func (c *FakeMeshServices) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(meshservicesResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a meshService and creates it.  Returns the server's representation of the meshService, and an error, if there is any.
-func (c *FakeMeshServices) Create(ctx context.Context, meshService *v1alpha3.MeshService, opts v1.CreateOptions) (result *v1alpha3.MeshService, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(meshservicesResource, c.ns, meshService), &v1alpha3.MeshService{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha3.MeshService), err
-}
-
-// Update takes the representation of a meshService and updates it. Returns the server's representation of the meshService, and an error, if there is any.
-func (c *FakeMeshServices) Update(ctx context.Context, meshService *v1alpha3.MeshService, opts v1.UpdateOptions) (result *v1alpha3.MeshService, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(meshservicesResource, c.ns, meshService), &v1alpha3.MeshService{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha3.MeshService), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeMeshServices) UpdateStatus(ctx context.Context, meshService *v1alpha3.MeshService, opts v1.UpdateOptions) (*v1alpha3.MeshService, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(meshservicesResource, "status", c.ns, meshService), &v1alpha3.MeshService{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha3.MeshService), err
-}
-
-// Delete takes name of the meshService and deletes it. Returns an error if one occurs.
-func (c *FakeMeshServices) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(meshservicesResource, c.ns, name, opts), &v1alpha3.MeshService{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeMeshServices) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(meshservicesResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha3.MeshServiceList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched meshService.
-func (c *FakeMeshServices) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha3.MeshService, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(meshservicesResource, c.ns, name, pt, data, subresources...), &v1alpha3.MeshService{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha3.MeshService), err
-}
-
-// Apply takes the given apply declarative configuration, applies it and returns the applied meshService.
-func (c *FakeMeshServices) Apply(ctx context.Context, meshService *networkingv1alpha3.MeshServiceApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha3.MeshService, err error) {
-	if meshService == nil {
-		return nil, fmt.Errorf("meshService provided to Apply must not be nil")
-	}
-	data, err := json.Marshal(meshService)
-	if err != nil {
-		return nil, err
-	}
-	name := meshService.Name
-	if name == nil {
-		return nil, fmt.Errorf("meshService.Name must be provided to Apply")
-	}
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(meshservicesResource, c.ns, *name, types.ApplyPatchType, data), &v1alpha3.MeshService{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha3.MeshService), err
-}
-
-// ApplyStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
-func (c *FakeMeshServices) ApplyStatus(ctx context.Context, meshService *networkingv1alpha3.MeshServiceApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha3.MeshService, err error) {
-	if meshService == nil {
-		return nil, fmt.Errorf("meshService provided to Apply must not be nil")
-	}
-	data, err := json.Marshal(meshService)
-	if err != nil {
-		return nil, err
-	}
-	name := meshService.Name
-	if name == nil {
-		return nil, fmt.Errorf("meshService.Name must be provided to Apply")
-	}
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(meshservicesResource, c.ns, *name, types.ApplyPatchType, data, "status"), &v1alpha3.MeshService{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha3.MeshService), err
 }

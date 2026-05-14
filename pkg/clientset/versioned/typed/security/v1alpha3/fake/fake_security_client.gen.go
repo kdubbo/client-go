@@ -29,7 +29,7 @@ type FakeSecurityV1alpha3 struct {
 }
 
 func (c *FakeSecurityV1alpha3) PeerAuthentications(namespace string) v1alpha3.PeerAuthenticationInterface {
-	return &FakePeerAuthentications{c, namespace}
+	return newFakePeerAuthentications(c, namespace)
 }
 
 // RESTClient returns a RESTClient that is used to communicate

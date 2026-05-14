@@ -19,171 +19,35 @@
 package fake
 
 import (
-	"context"
-	json "encoding/json"
-	"fmt"
-
 	v1alpha3 "github.com/kdubbo/client-go/pkg/apis/security/v1alpha3"
 	securityv1alpha3 "github.com/kdubbo/client-go/pkg/applyconfiguration/security/v1alpha3"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	typedsecurityv1alpha3 "github.com/kdubbo/client-go/pkg/clientset/versioned/typed/security/v1alpha3"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakePeerAuthentications implements PeerAuthenticationInterface
-type FakePeerAuthentications struct {
+// fakePeerAuthentications implements PeerAuthenticationInterface
+type fakePeerAuthentications struct {
+	*gentype.FakeClientWithListAndApply[*v1alpha3.PeerAuthentication, *v1alpha3.PeerAuthenticationList, *securityv1alpha3.PeerAuthenticationApplyConfiguration]
 	Fake *FakeSecurityV1alpha3
-	ns   string
 }
 
-var peerauthenticationsResource = v1alpha3.SchemeGroupVersion.WithResource("peerauthentications")
-
-var peerauthenticationsKind = v1alpha3.SchemeGroupVersion.WithKind("PeerAuthentication")
-
-// Get takes name of the peerAuthentication, and returns the corresponding peerAuthentication object, and an error if there is any.
-func (c *FakePeerAuthentications) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha3.PeerAuthentication, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(peerauthenticationsResource, c.ns, name), &v1alpha3.PeerAuthentication{})
-
-	if obj == nil {
-		return nil, err
+func newFakePeerAuthentications(fake *FakeSecurityV1alpha3, namespace string) typedsecurityv1alpha3.PeerAuthenticationInterface {
+	return &fakePeerAuthentications{
+		gentype.NewFakeClientWithListAndApply[*v1alpha3.PeerAuthentication, *v1alpha3.PeerAuthenticationList, *securityv1alpha3.PeerAuthenticationApplyConfiguration](
+			fake.Fake,
+			namespace,
+			v1alpha3.SchemeGroupVersion.WithResource("peerauthentications"),
+			v1alpha3.SchemeGroupVersion.WithKind("PeerAuthentication"),
+			func() *v1alpha3.PeerAuthentication { return &v1alpha3.PeerAuthentication{} },
+			func() *v1alpha3.PeerAuthenticationList { return &v1alpha3.PeerAuthenticationList{} },
+			func(dst, src *v1alpha3.PeerAuthenticationList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha3.PeerAuthenticationList) []*v1alpha3.PeerAuthentication {
+				return list.Items
+			},
+			func(list *v1alpha3.PeerAuthenticationList, items []*v1alpha3.PeerAuthentication) {
+				list.Items = items
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha3.PeerAuthentication), err
-}
-
-// List takes label and field selectors, and returns the list of PeerAuthentications that match those selectors.
-func (c *FakePeerAuthentications) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha3.PeerAuthenticationList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(peerauthenticationsResource, peerauthenticationsKind, c.ns, opts), &v1alpha3.PeerAuthenticationList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha3.PeerAuthenticationList{ListMeta: obj.(*v1alpha3.PeerAuthenticationList).ListMeta}
-	for _, item := range obj.(*v1alpha3.PeerAuthenticationList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested peerAuthentications.
-func (c *FakePeerAuthentications) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(peerauthenticationsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a peerAuthentication and creates it.  Returns the server's representation of the peerAuthentication, and an error, if there is any.
-func (c *FakePeerAuthentications) Create(ctx context.Context, peerAuthentication *v1alpha3.PeerAuthentication, opts v1.CreateOptions) (result *v1alpha3.PeerAuthentication, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(peerauthenticationsResource, c.ns, peerAuthentication), &v1alpha3.PeerAuthentication{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha3.PeerAuthentication), err
-}
-
-// Update takes the representation of a peerAuthentication and updates it. Returns the server's representation of the peerAuthentication, and an error, if there is any.
-func (c *FakePeerAuthentications) Update(ctx context.Context, peerAuthentication *v1alpha3.PeerAuthentication, opts v1.UpdateOptions) (result *v1alpha3.PeerAuthentication, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(peerauthenticationsResource, c.ns, peerAuthentication), &v1alpha3.PeerAuthentication{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha3.PeerAuthentication), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakePeerAuthentications) UpdateStatus(ctx context.Context, peerAuthentication *v1alpha3.PeerAuthentication, opts v1.UpdateOptions) (*v1alpha3.PeerAuthentication, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(peerauthenticationsResource, "status", c.ns, peerAuthentication), &v1alpha3.PeerAuthentication{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha3.PeerAuthentication), err
-}
-
-// Delete takes name of the peerAuthentication and deletes it. Returns an error if one occurs.
-func (c *FakePeerAuthentications) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(peerauthenticationsResource, c.ns, name, opts), &v1alpha3.PeerAuthentication{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakePeerAuthentications) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(peerauthenticationsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha3.PeerAuthenticationList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched peerAuthentication.
-func (c *FakePeerAuthentications) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha3.PeerAuthentication, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(peerauthenticationsResource, c.ns, name, pt, data, subresources...), &v1alpha3.PeerAuthentication{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha3.PeerAuthentication), err
-}
-
-// Apply takes the given apply declarative configuration, applies it and returns the applied peerAuthentication.
-func (c *FakePeerAuthentications) Apply(ctx context.Context, peerAuthentication *securityv1alpha3.PeerAuthenticationApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha3.PeerAuthentication, err error) {
-	if peerAuthentication == nil {
-		return nil, fmt.Errorf("peerAuthentication provided to Apply must not be nil")
-	}
-	data, err := json.Marshal(peerAuthentication)
-	if err != nil {
-		return nil, err
-	}
-	name := peerAuthentication.Name
-	if name == nil {
-		return nil, fmt.Errorf("peerAuthentication.Name must be provided to Apply")
-	}
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(peerauthenticationsResource, c.ns, *name, types.ApplyPatchType, data), &v1alpha3.PeerAuthentication{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha3.PeerAuthentication), err
-}
-
-// ApplyStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
-func (c *FakePeerAuthentications) ApplyStatus(ctx context.Context, peerAuthentication *securityv1alpha3.PeerAuthenticationApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha3.PeerAuthentication, err error) {
-	if peerAuthentication == nil {
-		return nil, fmt.Errorf("peerAuthentication provided to Apply must not be nil")
-	}
-	data, err := json.Marshal(peerAuthentication)
-	if err != nil {
-		return nil, err
-	}
-	name := peerAuthentication.Name
-	if name == nil {
-		return nil, fmt.Errorf("peerAuthentication.Name must be provided to Apply")
-	}
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(peerauthenticationsResource, c.ns, *name, types.ApplyPatchType, data, "status"), &v1alpha3.PeerAuthentication{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha3.PeerAuthentication), err
 }

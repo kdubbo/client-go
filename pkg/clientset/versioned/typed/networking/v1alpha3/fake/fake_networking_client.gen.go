@@ -29,7 +29,7 @@ type FakeNetworkingV1alpha3 struct {
 }
 
 func (c *FakeNetworkingV1alpha3) MeshServices(namespace string) v1alpha3.MeshServiceInterface {
-	return &FakeMeshServices{c, namespace}
+	return newFakeMeshServices(c, namespace)
 }
 
 // RESTClient returns a RESTClient that is used to communicate

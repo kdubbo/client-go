@@ -19,13 +19,13 @@
 package v1alpha3
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	securityv1alpha3 "github.com/kdubbo/client-go/pkg/apis/security/v1alpha3"
+	apissecurityv1alpha3 "github.com/kdubbo/client-go/pkg/apis/security/v1alpha3"
 	versioned "github.com/kdubbo/client-go/pkg/clientset/versioned"
 	internalinterfaces "github.com/kdubbo/client-go/pkg/informers/externalversions/internalinterfaces"
-	v1alpha3 "github.com/kdubbo/client-go/pkg/listers/security/v1alpha3"
+	securityv1alpha3 "github.com/kdubbo/client-go/pkg/listers/security/v1alpha3"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -36,7 +36,7 @@ import (
 // PeerAuthentications.
 type PeerAuthenticationInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha3.PeerAuthenticationLister
+	Lister() securityv1alpha3.PeerAuthenticationLister
 }
 
 type peerAuthenticationInformer struct {
@@ -62,16 +62,28 @@ func NewFilteredPeerAuthenticationInformer(client versioned.Interface, namespace
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.SecurityV1alpha3().PeerAuthentications(namespace).List(context.TODO(), options)
+				return client.SecurityV1alpha3().PeerAuthentications(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.SecurityV1alpha3().PeerAuthentications(namespace).Watch(context.TODO(), options)
+				return client.SecurityV1alpha3().PeerAuthentications(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.SecurityV1alpha3().PeerAuthentications(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.SecurityV1alpha3().PeerAuthentications(namespace).Watch(ctx, options)
 			},
 		},
-		&securityv1alpha3.PeerAuthentication{},
+		&apissecurityv1alpha3.PeerAuthentication{},
 		resyncPeriod,
 		indexers,
 	)
@@ -82,9 +94,9 @@ func (f *peerAuthenticationInformer) defaultInformer(client versioned.Interface,
 }
 
 func (f *peerAuthenticationInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&securityv1alpha3.PeerAuthentication{}, f.defaultInformer)
+	return f.factory.InformerFor(&apissecurityv1alpha3.PeerAuthentication{}, f.defaultInformer)
 }
 
-func (f *peerAuthenticationInformer) Lister() v1alpha3.PeerAuthenticationLister {
-	return v1alpha3.NewPeerAuthenticationLister(f.Informer().GetIndexer())
+func (f *peerAuthenticationInformer) Lister() securityv1alpha3.PeerAuthenticationLister {
+	return securityv1alpha3.NewPeerAuthenticationLister(f.Informer().GetIndexer())
 }

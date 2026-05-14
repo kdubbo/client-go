@@ -19,10 +19,10 @@
 package v1alpha3
 
 import (
-	v1alpha3 "github.com/kdubbo/client-go/pkg/apis/networking/v1alpha3"
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	networkingv1alpha3 "github.com/kdubbo/client-go/pkg/apis/networking/v1alpha3"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // MeshServiceLister helps list MeshServices.
@@ -30,7 +30,7 @@ import (
 type MeshServiceLister interface {
 	// List lists all MeshServices in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha3.MeshService, err error)
+	List(selector labels.Selector) (ret []*networkingv1alpha3.MeshService, err error)
 	// MeshServices returns an object that can list and get MeshServices.
 	MeshServices(namespace string) MeshServiceNamespaceLister
 	MeshServiceListerExpansion
@@ -38,25 +38,17 @@ type MeshServiceLister interface {
 
 // meshServiceLister implements the MeshServiceLister interface.
 type meshServiceLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*networkingv1alpha3.MeshService]
 }
 
 // NewMeshServiceLister returns a new MeshServiceLister.
 func NewMeshServiceLister(indexer cache.Indexer) MeshServiceLister {
-	return &meshServiceLister{indexer: indexer}
-}
-
-// List lists all MeshServices in the indexer.
-func (s *meshServiceLister) List(selector labels.Selector) (ret []*v1alpha3.MeshService, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha3.MeshService))
-	})
-	return ret, err
+	return &meshServiceLister{listers.New[*networkingv1alpha3.MeshService](indexer, networkingv1alpha3.Resource("meshservice"))}
 }
 
 // MeshServices returns an object that can list and get MeshServices.
 func (s *meshServiceLister) MeshServices(namespace string) MeshServiceNamespaceLister {
-	return meshServiceNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return meshServiceNamespaceLister{listers.NewNamespaced[*networkingv1alpha3.MeshService](s.ResourceIndexer, namespace)}
 }
 
 // MeshServiceNamespaceLister helps list and get MeshServices.
@@ -64,36 +56,15 @@ func (s *meshServiceLister) MeshServices(namespace string) MeshServiceNamespaceL
 type MeshServiceNamespaceLister interface {
 	// List lists all MeshServices in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha3.MeshService, err error)
+	List(selector labels.Selector) (ret []*networkingv1alpha3.MeshService, err error)
 	// Get retrieves the MeshService from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha3.MeshService, error)
+	Get(name string) (*networkingv1alpha3.MeshService, error)
 	MeshServiceNamespaceListerExpansion
 }
 
 // meshServiceNamespaceLister implements the MeshServiceNamespaceLister
 // interface.
 type meshServiceNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all MeshServices in the indexer for a given namespace.
-func (s meshServiceNamespaceLister) List(selector labels.Selector) (ret []*v1alpha3.MeshService, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha3.MeshService))
-	})
-	return ret, err
-}
-
-// Get retrieves the MeshService from the indexer for a given namespace and name.
-func (s meshServiceNamespaceLister) Get(name string) (*v1alpha3.MeshService, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha3.Resource("meshservice"), name)
-	}
-	return obj.(*v1alpha3.MeshService), nil
+	listers.ResourceIndexer[*networkingv1alpha3.MeshService]
 }

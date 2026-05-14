@@ -20,22 +20,22 @@ package v1alpha3
 
 import (
 	v1alpha1 "github.com/kdubbo/api/meta/v1alpha1"
-	v1alpha3 "github.com/kdubbo/api/security/v1alpha3"
-	v1 "github.com/kdubbo/client-go/pkg/applyconfiguration/meta/v1"
+	securityv1alpha3 "github.com/kdubbo/api/security/v1alpha3"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
+	v1 "k8s.io/client-go/applyconfigurations/meta/v1"
 )
 
-// PeerAuthenticationApplyConfiguration represents an declarative configuration of the PeerAuthentication type for use
+// PeerAuthenticationApplyConfiguration represents a declarative configuration of the PeerAuthentication type for use
 // with apply.
 type PeerAuthenticationApplyConfiguration struct {
 	v1.TypeMetaApplyConfiguration    `json:",inline"`
 	*v1.ObjectMetaApplyConfiguration `json:"metadata,omitempty"`
-	Spec                             *v1alpha3.PeerAuthentication `json:"spec,omitempty"`
-	Status                           *v1alpha1.DubboStatus        `json:"status,omitempty"`
+	Spec                             *securityv1alpha3.PeerAuthentication `json:"spec,omitempty"`
+	Status                           *v1alpha1.DubboStatus                `json:"status,omitempty"`
 }
 
-// PeerAuthentication constructs an declarative configuration of the PeerAuthentication type for use with
+// PeerAuthentication constructs a declarative configuration of the PeerAuthentication type for use with
 // apply.
 func PeerAuthentication(name, namespace string) *PeerAuthenticationApplyConfiguration {
 	b := &PeerAuthenticationApplyConfiguration{}
@@ -45,12 +45,13 @@ func PeerAuthentication(name, namespace string) *PeerAuthenticationApplyConfigur
 	b.WithAPIVersion("security.dubbo.apache.org/v1alpha3")
 	return b
 }
+func (b PeerAuthenticationApplyConfiguration) IsApplyConfiguration() {}
 
 // WithKind sets the Kind field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the Kind field is set to the value of the last call.
 func (b *PeerAuthenticationApplyConfiguration) WithKind(value string) *PeerAuthenticationApplyConfiguration {
-	b.Kind = &value
+	b.TypeMetaApplyConfiguration.Kind = &value
 	return b
 }
 
@@ -58,7 +59,7 @@ func (b *PeerAuthenticationApplyConfiguration) WithKind(value string) *PeerAuthe
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the APIVersion field is set to the value of the last call.
 func (b *PeerAuthenticationApplyConfiguration) WithAPIVersion(value string) *PeerAuthenticationApplyConfiguration {
-	b.APIVersion = &value
+	b.TypeMetaApplyConfiguration.APIVersion = &value
 	return b
 }
 
@@ -67,7 +68,7 @@ func (b *PeerAuthenticationApplyConfiguration) WithAPIVersion(value string) *Pee
 // If called multiple times, the Name field is set to the value of the last call.
 func (b *PeerAuthenticationApplyConfiguration) WithName(value string) *PeerAuthenticationApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
-	b.Name = &value
+	b.ObjectMetaApplyConfiguration.Name = &value
 	return b
 }
 
@@ -76,7 +77,7 @@ func (b *PeerAuthenticationApplyConfiguration) WithName(value string) *PeerAuthe
 // If called multiple times, the GenerateName field is set to the value of the last call.
 func (b *PeerAuthenticationApplyConfiguration) WithGenerateName(value string) *PeerAuthenticationApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
-	b.GenerateName = &value
+	b.ObjectMetaApplyConfiguration.GenerateName = &value
 	return b
 }
 
@@ -85,7 +86,7 @@ func (b *PeerAuthenticationApplyConfiguration) WithGenerateName(value string) *P
 // If called multiple times, the Namespace field is set to the value of the last call.
 func (b *PeerAuthenticationApplyConfiguration) WithNamespace(value string) *PeerAuthenticationApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
-	b.Namespace = &value
+	b.ObjectMetaApplyConfiguration.Namespace = &value
 	return b
 }
 
@@ -94,7 +95,7 @@ func (b *PeerAuthenticationApplyConfiguration) WithNamespace(value string) *Peer
 // If called multiple times, the UID field is set to the value of the last call.
 func (b *PeerAuthenticationApplyConfiguration) WithUID(value types.UID) *PeerAuthenticationApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
-	b.UID = &value
+	b.ObjectMetaApplyConfiguration.UID = &value
 	return b
 }
 
@@ -103,7 +104,7 @@ func (b *PeerAuthenticationApplyConfiguration) WithUID(value types.UID) *PeerAut
 // If called multiple times, the ResourceVersion field is set to the value of the last call.
 func (b *PeerAuthenticationApplyConfiguration) WithResourceVersion(value string) *PeerAuthenticationApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
-	b.ResourceVersion = &value
+	b.ObjectMetaApplyConfiguration.ResourceVersion = &value
 	return b
 }
 
@@ -112,7 +113,7 @@ func (b *PeerAuthenticationApplyConfiguration) WithResourceVersion(value string)
 // If called multiple times, the Generation field is set to the value of the last call.
 func (b *PeerAuthenticationApplyConfiguration) WithGeneration(value int64) *PeerAuthenticationApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
-	b.Generation = &value
+	b.ObjectMetaApplyConfiguration.Generation = &value
 	return b
 }
 
@@ -121,7 +122,7 @@ func (b *PeerAuthenticationApplyConfiguration) WithGeneration(value int64) *Peer
 // If called multiple times, the CreationTimestamp field is set to the value of the last call.
 func (b *PeerAuthenticationApplyConfiguration) WithCreationTimestamp(value metav1.Time) *PeerAuthenticationApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
-	b.CreationTimestamp = &value
+	b.ObjectMetaApplyConfiguration.CreationTimestamp = &value
 	return b
 }
 
@@ -130,7 +131,7 @@ func (b *PeerAuthenticationApplyConfiguration) WithCreationTimestamp(value metav
 // If called multiple times, the DeletionTimestamp field is set to the value of the last call.
 func (b *PeerAuthenticationApplyConfiguration) WithDeletionTimestamp(value metav1.Time) *PeerAuthenticationApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
-	b.DeletionTimestamp = &value
+	b.ObjectMetaApplyConfiguration.DeletionTimestamp = &value
 	return b
 }
 
@@ -139,7 +140,7 @@ func (b *PeerAuthenticationApplyConfiguration) WithDeletionTimestamp(value metav
 // If called multiple times, the DeletionGracePeriodSeconds field is set to the value of the last call.
 func (b *PeerAuthenticationApplyConfiguration) WithDeletionGracePeriodSeconds(value int64) *PeerAuthenticationApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
-	b.DeletionGracePeriodSeconds = &value
+	b.ObjectMetaApplyConfiguration.DeletionGracePeriodSeconds = &value
 	return b
 }
 
@@ -149,11 +150,11 @@ func (b *PeerAuthenticationApplyConfiguration) WithDeletionGracePeriodSeconds(va
 // overwriting an existing map entries in Labels field with the same key.
 func (b *PeerAuthenticationApplyConfiguration) WithLabels(entries map[string]string) *PeerAuthenticationApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
-	if b.Labels == nil && len(entries) > 0 {
-		b.Labels = make(map[string]string, len(entries))
+	if b.ObjectMetaApplyConfiguration.Labels == nil && len(entries) > 0 {
+		b.ObjectMetaApplyConfiguration.Labels = make(map[string]string, len(entries))
 	}
 	for k, v := range entries {
-		b.Labels[k] = v
+		b.ObjectMetaApplyConfiguration.Labels[k] = v
 	}
 	return b
 }
@@ -164,11 +165,11 @@ func (b *PeerAuthenticationApplyConfiguration) WithLabels(entries map[string]str
 // overwriting an existing map entries in Annotations field with the same key.
 func (b *PeerAuthenticationApplyConfiguration) WithAnnotations(entries map[string]string) *PeerAuthenticationApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
-	if b.Annotations == nil && len(entries) > 0 {
-		b.Annotations = make(map[string]string, len(entries))
+	if b.ObjectMetaApplyConfiguration.Annotations == nil && len(entries) > 0 {
+		b.ObjectMetaApplyConfiguration.Annotations = make(map[string]string, len(entries))
 	}
 	for k, v := range entries {
-		b.Annotations[k] = v
+		b.ObjectMetaApplyConfiguration.Annotations[k] = v
 	}
 	return b
 }
@@ -182,7 +183,7 @@ func (b *PeerAuthenticationApplyConfiguration) WithOwnerReferences(values ...*v1
 		if values[i] == nil {
 			panic("nil value passed to WithOwnerReferences")
 		}
-		b.OwnerReferences = append(b.OwnerReferences, *values[i])
+		b.ObjectMetaApplyConfiguration.OwnerReferences = append(b.ObjectMetaApplyConfiguration.OwnerReferences, *values[i])
 	}
 	return b
 }
@@ -193,7 +194,7 @@ func (b *PeerAuthenticationApplyConfiguration) WithOwnerReferences(values ...*v1
 func (b *PeerAuthenticationApplyConfiguration) WithFinalizers(values ...string) *PeerAuthenticationApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
 	for i := range values {
-		b.Finalizers = append(b.Finalizers, values[i])
+		b.ObjectMetaApplyConfiguration.Finalizers = append(b.ObjectMetaApplyConfiguration.Finalizers, values[i])
 	}
 	return b
 }
@@ -207,7 +208,7 @@ func (b *PeerAuthenticationApplyConfiguration) ensureObjectMetaApplyConfiguratio
 // WithSpec sets the Spec field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the Spec field is set to the value of the last call.
-func (b *PeerAuthenticationApplyConfiguration) WithSpec(value v1alpha3.PeerAuthentication) *PeerAuthenticationApplyConfiguration {
+func (b *PeerAuthenticationApplyConfiguration) WithSpec(value securityv1alpha3.PeerAuthentication) *PeerAuthenticationApplyConfiguration {
 	b.Spec = &value
 	return b
 }
@@ -218,4 +219,26 @@ func (b *PeerAuthenticationApplyConfiguration) WithSpec(value v1alpha3.PeerAuthe
 func (b *PeerAuthenticationApplyConfiguration) WithStatus(value v1alpha1.DubboStatus) *PeerAuthenticationApplyConfiguration {
 	b.Status = &value
 	return b
+}
+
+// GetKind retrieves the value of the Kind field in the declarative configuration.
+func (b *PeerAuthenticationApplyConfiguration) GetKind() *string {
+	return b.TypeMetaApplyConfiguration.Kind
+}
+
+// GetAPIVersion retrieves the value of the APIVersion field in the declarative configuration.
+func (b *PeerAuthenticationApplyConfiguration) GetAPIVersion() *string {
+	return b.TypeMetaApplyConfiguration.APIVersion
+}
+
+// GetName retrieves the value of the Name field in the declarative configuration.
+func (b *PeerAuthenticationApplyConfiguration) GetName() *string {
+	b.ensureObjectMetaApplyConfigurationExists()
+	return b.ObjectMetaApplyConfiguration.Name
+}
+
+// GetNamespace retrieves the value of the Namespace field in the declarative configuration.
+func (b *PeerAuthenticationApplyConfiguration) GetNamespace() *string {
+	b.ensureObjectMetaApplyConfigurationExists()
+	return b.ObjectMetaApplyConfiguration.Namespace
 }
