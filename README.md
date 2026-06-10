@@ -1,3 +1,3 @@
-# client-go
+# Golang Client Library for Dubbo APIs
 
-[![GoDoc](https://pkg.go.dev/badge/github.com/kdubbo/client-go.svg)](https://pkg.go.dev/github.com/kdubbo/client-go)
+This repository contains clients used to interact with Dubbo control plane resources in Kubernetes clusters.
