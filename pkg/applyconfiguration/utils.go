@@ -19,10 +19,8 @@
 package applyconfiguration
 
 import (
-	v1alpha3 "github.com/kdubbo/client-go/pkg/apis/networking/v1alpha3"
 	securityv1alpha3 "github.com/kdubbo/client-go/pkg/apis/security/v1alpha3"
 	internal "github.com/kdubbo/client-go/pkg/applyconfiguration/internal"
-	networkingv1alpha3 "github.com/kdubbo/client-go/pkg/applyconfiguration/networking/v1alpha3"
 	applyconfigurationsecurityv1alpha3 "github.com/kdubbo/client-go/pkg/applyconfiguration/security/v1alpha3"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
@@ -33,11 +31,7 @@ import (
 // apply configuration type exists for the given GroupVersionKind.
 func ForKind(kind schema.GroupVersionKind) interface{} {
 	switch kind {
-	// Group=networking.dubbo.apache.org, Version=v1alpha3
-	case v1alpha3.SchemeGroupVersion.WithKind("MeshService"):
-		return &networkingv1alpha3.MeshServiceApplyConfiguration{}
-
-		// Group=security.dubbo.apache.org, Version=v1alpha3
+	// Group=security.dubbo.apache.org, Version=v1alpha3
 	case securityv1alpha3.SchemeGroupVersion.WithKind("AuthorizationPolicy"):
 		return &applyconfigurationsecurityv1alpha3.AuthorizationPolicyApplyConfiguration{}
 	case securityv1alpha3.SchemeGroupVersion.WithKind("PeerAuthentication"):

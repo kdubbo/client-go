@@ -21,7 +21,6 @@ package externalversions
 import (
 	fmt "fmt"
 
-	v1alpha3 "github.com/kdubbo/client-go/pkg/apis/networking/v1alpha3"
 	securityv1alpha3 "github.com/kdubbo/client-go/pkg/apis/security/v1alpha3"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	cache "k8s.io/client-go/tools/cache"
@@ -53,11 +52,7 @@ func (f *genericInformer) Lister() cache.GenericLister {
 // TODO extend this to unknown resources with a client pool
 func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource) (GenericInformer, error) {
 	switch resource {
-	// Group=networking.dubbo.apache.org, Version=v1alpha3
-	case v1alpha3.SchemeGroupVersion.WithResource("meshservices"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Networking().V1alpha3().MeshServices().Informer()}, nil
-
-		// Group=security.dubbo.apache.org, Version=v1alpha3
+	// Group=security.dubbo.apache.org, Version=v1alpha3
 	case securityv1alpha3.SchemeGroupVersion.WithResource("authorizationpolicies"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Security().V1alpha3().AuthorizationPolicies().Informer()}, nil
 	case securityv1alpha3.SchemeGroupVersion.WithResource("peerauthentications"):

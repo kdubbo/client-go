@@ -19,7 +19,6 @@
 package fake
 
 import (
-	networkingv1alpha3 "github.com/kdubbo/client-go/pkg/apis/networking/v1alpha3"
 	securityv1alpha3 "github.com/kdubbo/client-go/pkg/apis/security/v1alpha3"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -32,7 +31,6 @@ var scheme = runtime.NewScheme()
 var codecs = serializer.NewCodecFactory(scheme)
 
 var localSchemeBuilder = runtime.SchemeBuilder{
-	networkingv1alpha3.AddToScheme,
 	securityv1alpha3.AddToScheme,
 }
 
