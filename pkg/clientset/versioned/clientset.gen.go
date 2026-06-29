@@ -22,6 +22,7 @@ import (
 	fmt "fmt"
 	http "net/http"
 
+	networkingv1alpha3 "github.com/kdubbo/client-go/pkg/clientset/versioned/typed/networking/v1alpha3"
 	securityv1alpha3 "github.com/kdubbo/client-go/pkg/clientset/versioned/typed/security/v1alpha3"
 	discovery "k8s.io/client-go/discovery"
 	rest "k8s.io/client-go/rest"
@@ -30,13 +31,20 @@ import (
 
 type Interface interface {
 	Discovery() discovery.DiscoveryInterface
+	NetworkingV1alpha3() networkingv1alpha3.NetworkingV1alpha3Interface
 	SecurityV1alpha3() securityv1alpha3.SecurityV1alpha3Interface
 }
 
 // Clientset contains the clients for groups.
 type Clientset struct {
 	*discovery.DiscoveryClient
-	securityV1alpha3 *securityv1alpha3.SecurityV1alpha3Client
+	networkingV1alpha3 *networkingv1alpha3.NetworkingV1alpha3Client
+	securityV1alpha3   *securityv1alpha3.SecurityV1alpha3Client
+}
+
+// NetworkingV1alpha3 retrieves the NetworkingV1alpha3Client
+func (c *Clientset) NetworkingV1alpha3() networkingv1alpha3.NetworkingV1alpha3Interface {
+	return c.networkingV1alpha3
 }
 
 // SecurityV1alpha3 retrieves the SecurityV1alpha3Client
@@ -88,6 +96,10 @@ func NewForConfigAndClient(c *rest.Config, httpClient *http.Client) (*Clientset,
 
 	var cs Clientset
 	var err error
+	cs.networkingV1alpha3, err = networkingv1alpha3.NewForConfigAndClient(&configShallowCopy, httpClient)
+	if err != nil {
+		return nil, err
+	}
 	cs.securityV1alpha3, err = securityv1alpha3.NewForConfigAndClient(&configShallowCopy, httpClient)
 	if err != nil {
 		return nil, err
@@ -113,6 +125,7 @@ func NewForConfigOrDie(c *rest.Config) *Clientset {
 // New creates a new Clientset for the given RESTClient.
 func New(c rest.Interface) *Clientset {
 	var cs Clientset
+	cs.networkingV1alpha3 = networkingv1alpha3.New(c)
 	cs.securityV1alpha3 = securityv1alpha3.New(c)
 
 	cs.DiscoveryClient = discovery.NewDiscoveryClient(c)

@@ -25,6 +25,7 @@ import (
 
 	versioned "github.com/kdubbo/client-go/pkg/clientset/versioned"
 	internalinterfaces "github.com/kdubbo/client-go/pkg/informers/externalversions/internalinterfaces"
+	networking "github.com/kdubbo/client-go/pkg/informers/externalversions/networking"
 	security "github.com/kdubbo/client-go/pkg/informers/externalversions/security"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -254,7 +255,12 @@ type SharedInformerFactory interface {
 	// client.
 	InformerFor(obj runtime.Object, newFunc internalinterfaces.NewInformerFunc) cache.SharedIndexInformer
 
+	Networking() networking.Interface
 	Security() security.Interface
+}
+
+func (f *sharedInformerFactory) Networking() networking.Interface {
+	return networking.New(f, f.namespace, f.tweakListOptions)
 }
 
 func (f *sharedInformerFactory) Security() security.Interface {
