@@ -21,9 +21,11 @@ package applyconfiguration
 import (
 	v1alpha3 "github.com/kdubbo/client-go/pkg/apis/networking/v1alpha3"
 	securityv1alpha3 "github.com/kdubbo/client-go/pkg/apis/security/v1alpha3"
+	v1alpha1 "github.com/kdubbo/client-go/pkg/apis/telemetry/v1alpha1"
 	internal "github.com/kdubbo/client-go/pkg/applyconfiguration/internal"
 	networkingv1alpha3 "github.com/kdubbo/client-go/pkg/applyconfiguration/networking/v1alpha3"
 	applyconfigurationsecurityv1alpha3 "github.com/kdubbo/client-go/pkg/applyconfiguration/security/v1alpha3"
+	telemetryv1alpha1 "github.com/kdubbo/client-go/pkg/applyconfiguration/telemetry/v1alpha1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	managedfields "k8s.io/apimachinery/pkg/util/managedfields"
@@ -44,6 +46,10 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &applyconfigurationsecurityv1alpha3.PeerAuthenticationApplyConfiguration{}
 	case securityv1alpha3.SchemeGroupVersion.WithKind("RequestAuthentication"):
 		return &applyconfigurationsecurityv1alpha3.RequestAuthenticationApplyConfiguration{}
+
+		// Group=telemetry.dubbo.apache.org, Version=v1alpha1
+	case v1alpha1.SchemeGroupVersion.WithKind("Telemetry"):
+		return &telemetryv1alpha1.TelemetryApplyConfiguration{}
 
 	}
 	return nil

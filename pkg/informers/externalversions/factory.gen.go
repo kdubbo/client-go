@@ -27,6 +27,7 @@ import (
 	internalinterfaces "github.com/kdubbo/client-go/pkg/informers/externalversions/internalinterfaces"
 	networking "github.com/kdubbo/client-go/pkg/informers/externalversions/networking"
 	security "github.com/kdubbo/client-go/pkg/informers/externalversions/security"
+	telemetry "github.com/kdubbo/client-go/pkg/informers/externalversions/telemetry"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
@@ -257,6 +258,7 @@ type SharedInformerFactory interface {
 
 	Networking() networking.Interface
 	Security() security.Interface
+	Telemetry() telemetry.Interface
 }
 
 func (f *sharedInformerFactory) Networking() networking.Interface {
@@ -265,4 +267,8 @@ func (f *sharedInformerFactory) Networking() networking.Interface {
 
 func (f *sharedInformerFactory) Security() security.Interface {
 	return security.New(f, f.namespace, f.tweakListOptions)
+}
+
+func (f *sharedInformerFactory) Telemetry() telemetry.Interface {
+	return telemetry.New(f, f.namespace, f.tweakListOptions)
 }
