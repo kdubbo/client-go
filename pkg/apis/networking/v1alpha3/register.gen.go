@@ -45,6 +45,10 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 	scheme.AddKnownTypes(SchemeGroupVersion,
 		&CircuitBreakerPolicy{},
 		&CircuitBreakerPolicyList{},
+		&ServiceEntry{},
+		&ServiceEntryList{},
+		&WorkloadEntry{},
+		&WorkloadEntryList{},
 	)
 	v1.AddToGroupVersion(scheme, SchemeGroupVersion)
 	return nil

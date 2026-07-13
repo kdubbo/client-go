@@ -26,8 +26,32 @@ import (
 
 //
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-// +genclient
 
+// AuthorizationPolicy defines request authorization policies.
+//
+// <!-- crd generation tags
+// +cue-gen:AuthorizationPolicy:groupName:security.dubbo.apache.org
+// +cue-gen:AuthorizationPolicy:versions:v1alpha3
+// +cue-gen:AuthorizationPolicy:storageVersion
+// +cue-gen:AuthorizationPolicy:annotations:helm.sh/resource-policy=keep
+// +cue-gen:AuthorizationPolicy:labels:app=dubbo,chart=dubbo,dubbo=security,heritage=Tiller,release=dubbo
+// +cue-gen:AuthorizationPolicy:subresource:status
+// +cue-gen:AuthorizationPolicy:scope:Namespaced
+// +cue-gen:AuthorizationPolicy:resource:categories=dubbo,security,shortNames=ap
+// +cue-gen:AuthorizationPolicy:preserveUnknownFields:false
+// +cue-gen:AuthorizationPolicy:printerColumn:name=Action,type=string,JSONPath=.spec.action,description="The authorization action."
+// +cue-gen:AuthorizationPolicy:printerColumn:name=Age,type=date,JSONPath=.metadata.creationTimestamp,description="CreationTimestamp is a timestamp
+// representing the server time when this object was created. It is not guaranteed to be set in happens-before order across separate operations.
+// Clients may not set this value. It is represented in RFC3339 form and is in UTC.
+// Populated by the system. Read-only. Null for lists. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata"
+// -->
+//
+// <!-- go code generation tags
+// +kubetype-gen
+// +kubetype-gen:groupVersion=security.dubbo.apache.org/v1alpha3
+// +genclient
+// +k8s:deepcopy-gen=true
+// -->
 type AuthorizationPolicy struct {
 	v1.TypeMeta `json:",inline"`
 	// +optional
@@ -52,8 +76,32 @@ type AuthorizationPolicyList struct {
 
 //
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-// +genclient
 
+// PeerAuthentication defines mutual TLS (mTLS) requirements for incoming connections.
+//
+// <!-- crd generation tags
+// +cue-gen:PeerAuthentication:groupName:security.dubbo.apache.org
+// +cue-gen:PeerAuthentication:versions:v1alpha3
+// +cue-gen:PeerAuthentication:storageVersion
+// +cue-gen:PeerAuthentication:annotations:helm.sh/resource-policy=keep
+// +cue-gen:PeerAuthentication:labels:app=dubbo,chart=dubbo,dubbo=security,heritage=Tiller,release=dubbo
+// +cue-gen:PeerAuthentication:subresource:status
+// +cue-gen:PeerAuthentication:scope:Namespaced
+// +cue-gen:PeerAuthentication:resource:categories=dubbo,security,shortNames=pa
+// +cue-gen:PeerAuthentication:preserveUnknownFields:false
+// +cue-gen:PeerAuthentication:printerColumn:name=Mode,type=string,JSONPath=.spec.mtls.mode,description="Defines the mTLS mode used for peer authentication."
+// +cue-gen:PeerAuthentication:printerColumn:name=Age,type=date,JSONPath=.metadata.creationTimestamp,description="CreationTimestamp is a timestamp
+// representing the server time when this object was created. It is not guaranteed to be set in happens-before order across separate operations.
+// Clients may not set this value. It is represented in RFC3339 form and is in UTC.
+// Populated by the system. Read-only. Null for lists. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata"
+// -->
+//
+// <!-- go code generation tags
+// +kubetype-gen
+// +kubetype-gen:groupVersion=security.dubbo.apache.org/v1alpha3
+// +genclient
+// +k8s:deepcopy-gen=true
+// -->
 // +kubebuilder:validation:XValidation:message="portLevelMtls requires selector",rule="has(self.portLevelMtls) ? self.index({}, selector, matchLabels).size() > 0 : true"
 type PeerAuthentication struct {
 	v1.TypeMeta `json:",inline"`
@@ -79,8 +127,32 @@ type PeerAuthenticationList struct {
 
 //
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-// +genclient
 
+// RequestAuthentication defines request-level authentication policies.
+//
+// <!-- crd generation tags
+// +cue-gen:RequestAuthentication:groupName:security.dubbo.apache.org
+// +cue-gen:RequestAuthentication:versions:v1alpha3
+// +cue-gen:RequestAuthentication:storageVersion
+// +cue-gen:RequestAuthentication:annotations:helm.sh/resource-policy=keep
+// +cue-gen:RequestAuthentication:labels:app=dubbo,chart=dubbo,dubbo=security,heritage=Tiller,release=dubbo
+// +cue-gen:RequestAuthentication:subresource:status
+// +cue-gen:RequestAuthentication:scope:Namespaced
+// +cue-gen:RequestAuthentication:resource:categories=dubbo,security,shortNames=ra
+// +cue-gen:RequestAuthentication:preserveUnknownFields:false
+// +cue-gen:RequestAuthentication:printerColumn:name=Issuer,type=string,JSONPath=.spec.jwtRules[*].issuer,description="JWT issuers accepted by this policy."
+// +cue-gen:RequestAuthentication:printerColumn:name=Age,type=date,JSONPath=.metadata.creationTimestamp,description="CreationTimestamp is a timestamp
+// representing the server time when this object was created. It is not guaranteed to be set in happens-before order across separate operations.
+// Clients may not set this value. It is represented in RFC3339 form and is in UTC.
+// Populated by the system. Read-only. Null for lists. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata"
+// -->
+//
+// <!-- go code generation tags
+// +kubetype-gen
+// +kubetype-gen:groupVersion=security.dubbo.apache.org/v1alpha3
+// +genclient
+// +k8s:deepcopy-gen=true
+// -->
 type RequestAuthentication struct {
 	v1.TypeMeta `json:",inline"`
 	// +optional

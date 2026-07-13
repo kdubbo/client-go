@@ -26,8 +26,30 @@ import (
 
 //
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-// +genclient
 
+// CircuitBreakerPolicy attaches circuit breaking settings to Gateway API
+// backend targets, typically Services referenced by HTTPRoute backendRefs.
+//
+// <!-- crd generation tags
+// +cue-gen:CircuitBreakerPolicy:groupName:networking.dubbo.apache.org
+// +cue-gen:CircuitBreakerPolicy:versions:v1alpha3
+// +cue-gen:CircuitBreakerPolicy:storageVersion
+// +cue-gen:CircuitBreakerPolicy:annotations:helm.sh/resource-policy=keep
+// +cue-gen:CircuitBreakerPolicy:labels:app=dubbo,chart=dubbo,dubbo=networking,heritage=Tiller,release=dubbo
+// +cue-gen:CircuitBreakerPolicy:subresource:status
+// +cue-gen:CircuitBreakerPolicy:scope:Namespaced
+// +cue-gen:CircuitBreakerPolicy:resource:categories=dubbo,networking,shortNames=cbp,plural=circuitbreakerpolicies,singular=circuitbreakerpolicy
+// +cue-gen:CircuitBreakerPolicy:preserveUnknownFields:false
+// +cue-gen:CircuitBreakerPolicy:printerColumn:name=Targets,type=string,JSONPath=.spec.targetRefs[*].name,description="Gateway API targets."
+// +cue-gen:CircuitBreakerPolicy:printerColumn:name=Age,type=date,JSONPath=.metadata.creationTimestamp,description="CreationTimestamp is a timestamp representing the server time when this object was created."
+// -->
+//
+// <!-- go code generation tags
+// +kubetype-gen
+// +kubetype-gen:groupVersion=networking.dubbo.apache.org/v1alpha3
+// +genclient
+// +k8s:deepcopy-gen=true
+// -->
 type CircuitBreakerPolicy struct {
 	v1.TypeMeta `json:",inline"`
 	// +optional
@@ -48,4 +70,102 @@ type CircuitBreakerPolicyList struct {
 	// +optional
 	v1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 	Items       []*CircuitBreakerPolicy `json:"items" protobuf:"bytes,2,rep,name=items"`
+}
+
+//
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// ServiceEntry adds services that are not discovered from Kubernetes.
+//
+// <!-- crd generation tags
+// +cue-gen:ServiceEntry:groupName:networking.dubbo.apache.org
+// +cue-gen:ServiceEntry:versions:v1alpha3
+// +cue-gen:ServiceEntry:storageVersion
+// +cue-gen:ServiceEntry:annotations:helm.sh/resource-policy=keep
+// +cue-gen:ServiceEntry:labels:app=dubbo,chart=dubbo,dubbo=networking,heritage=Tiller,release=dubbo
+// +cue-gen:ServiceEntry:subresource:status
+// +cue-gen:ServiceEntry:scope:Namespaced
+// +cue-gen:ServiceEntry:resource:categories=dubbo,networking,shortNames=se,plural=serviceentries,singular=serviceentry
+// +cue-gen:ServiceEntry:preserveUnknownFields:false
+// +cue-gen:ServiceEntry:printerColumn:name=Hosts,type=string,JSONPath=.spec.hosts,description="Service hosts."
+// +cue-gen:ServiceEntry:printerColumn:name=Location,type=string,JSONPath=.spec.location,description="Service location."
+// +cue-gen:ServiceEntry:printerColumn:name=Resolution,type=string,JSONPath=.spec.resolution,description="Service resolution."
+// +cue-gen:ServiceEntry:printerColumn:name=Age,type=date,JSONPath=.metadata.creationTimestamp,description="CreationTimestamp is a timestamp representing the server time when this object was created."
+// -->
+//
+// <!-- go code generation tags
+// +kubetype-gen
+// +kubetype-gen:groupVersion=networking.dubbo.apache.org/v1alpha3
+// +genclient
+// +k8s:deepcopy-gen=true
+// -->
+// +kubebuilder:validation:XValidation:message="only one of workloadSelector or endpoints can be set",rule="!(has(self.workloadSelector) && has(self.endpoints))"
+type ServiceEntry struct {
+	v1.TypeMeta `json:",inline"`
+	// +optional
+	v1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+
+	// Spec defines the implementation of this definition.
+	// +optional
+	Spec networkingv1alpha3.ServiceEntry `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
+
+	Status v1alpha1.DubboStatus `json:"status,omitempty"`
+}
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// ServiceEntryList is a collection of ServiceEntries.
+type ServiceEntryList struct {
+	v1.TypeMeta `json:",inline"`
+	// +optional
+	v1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	Items       []*ServiceEntry `json:"items" protobuf:"bytes,2,rep,name=items"`
+}
+
+//
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// WorkloadEntry describes a VM, bare-metal process, or other workload that
+// participates in services declared by ServiceEntry.
+//
+// <!-- crd generation tags
+// +cue-gen:WorkloadEntry:groupName:networking.dubbo.apache.org
+// +cue-gen:WorkloadEntry:versions:v1alpha3
+// +cue-gen:WorkloadEntry:storageVersion
+// +cue-gen:WorkloadEntry:annotations:helm.sh/resource-policy=keep
+// +cue-gen:WorkloadEntry:labels:app=dubbo,chart=dubbo,dubbo=networking,heritage=Tiller,release=dubbo
+// +cue-gen:WorkloadEntry:subresource:status
+// +cue-gen:WorkloadEntry:scope:Namespaced
+// +cue-gen:WorkloadEntry:resource:categories=dubbo,networking,shortNames=we,plural=workloadentries,singular=workloadentry
+// +cue-gen:WorkloadEntry:preserveUnknownFields:false
+// +cue-gen:WorkloadEntry:printerColumn:name=Address,type=string,JSONPath=.spec.address,description="Workload address."
+// +cue-gen:WorkloadEntry:printerColumn:name=Age,type=date,JSONPath=.metadata.creationTimestamp,description="CreationTimestamp is a timestamp representing the server time when this object was created."
+// -->
+//
+// <!-- go code generation tags
+// +kubetype-gen
+// +kubetype-gen:groupVersion=networking.dubbo.apache.org/v1alpha3
+// +genclient
+// +k8s:deepcopy-gen=true
+// -->
+type WorkloadEntry struct {
+	v1.TypeMeta `json:",inline"`
+	// +optional
+	v1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+
+	// Spec defines the implementation of this definition.
+	// +optional
+	Spec networkingv1alpha3.WorkloadEntry `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
+
+	Status v1alpha1.DubboStatus `json:"status,omitempty"`
+}
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// WorkloadEntryList is a collection of WorkloadEntries.
+type WorkloadEntryList struct {
+	v1.TypeMeta `json:",inline"`
+	// +optional
+	v1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	Items       []*WorkloadEntry `json:"items" protobuf:"bytes,2,rep,name=items"`
 }

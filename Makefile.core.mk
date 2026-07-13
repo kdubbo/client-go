@@ -66,7 +66,9 @@ fixup_generated_files=\
 
 .PHONY: generate-k8s-client
 generate-k8s-client:
-	# use checked-in kube api type wrappers for dubbo types
+	# generate kube api type wrappers for dubbo types
+	@GODEBUG=gotypesalias=0 $(kubetype_gen) --input-dirs $(kube_dubbo_source_packages) --output-package $(kube_api_base_package) -h $(kube_go_header_text)
+	@$(move_generated)
 	# generate deepcopy for kube api types
 	@$(deepcopy_gen) --output-file zz_generated.deepcopy.gen.go --go-header-file $(kube_go_header_text) $(kube_api_package_list)
 	# generate ssa for kube api types

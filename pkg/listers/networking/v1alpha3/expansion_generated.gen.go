@@ -25,3 +25,19 @@ type CircuitBreakerPolicyListerExpansion interface{}
 // CircuitBreakerPolicyNamespaceListerExpansion allows custom methods to be added to
 // CircuitBreakerPolicyNamespaceLister.
 type CircuitBreakerPolicyNamespaceListerExpansion interface{}
+
+// ServiceEntryListerExpansion allows custom methods to be added to
+// ServiceEntryLister.
+type ServiceEntryListerExpansion interface{}
+
+// ServiceEntryNamespaceListerExpansion allows custom methods to be added to
+// ServiceEntryNamespaceLister.
+type ServiceEntryNamespaceListerExpansion interface{}
+
+// WorkloadEntryListerExpansion allows custom methods to be added to
+// WorkloadEntryLister.
+type WorkloadEntryListerExpansion interface{}
+
+// WorkloadEntryNamespaceListerExpansion allows custom methods to be added to
+// WorkloadEntryNamespaceLister.
+type WorkloadEntryNamespaceListerExpansion interface{}

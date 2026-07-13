@@ -29,6 +29,8 @@ import (
 type NetworkingV1alpha3Interface interface {
 	RESTClient() rest.Interface
 	CircuitBreakerPoliciesGetter
+	ServiceEntriesGetter
+	WorkloadEntriesGetter
 }
 
 // NetworkingV1alpha3Client is used to interact with features provided by the networking.dubbo.apache.org group.
@@ -38,6 +40,14 @@ type NetworkingV1alpha3Client struct {
 
 func (c *NetworkingV1alpha3Client) CircuitBreakerPolicies(namespace string) CircuitBreakerPolicyInterface {
 	return newCircuitBreakerPolicies(c, namespace)
+}
+
+func (c *NetworkingV1alpha3Client) ServiceEntries(namespace string) ServiceEntryInterface {
+	return newServiceEntries(c, namespace)
+}
+
+func (c *NetworkingV1alpha3Client) WorkloadEntries(namespace string) WorkloadEntryInterface {
+	return newWorkloadEntries(c, namespace)
 }
 
 // NewForConfig creates a new NetworkingV1alpha3Client for the given config.

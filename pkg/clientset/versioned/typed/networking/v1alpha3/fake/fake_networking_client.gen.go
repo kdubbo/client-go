@@ -32,6 +32,14 @@ func (c *FakeNetworkingV1alpha3) CircuitBreakerPolicies(namespace string) v1alph
 	return newFakeCircuitBreakerPolicies(c, namespace)
 }
 
+func (c *FakeNetworkingV1alpha3) ServiceEntries(namespace string) v1alpha3.ServiceEntryInterface {
+	return newFakeServiceEntries(c, namespace)
+}
+
+func (c *FakeNetworkingV1alpha3) WorkloadEntries(namespace string) v1alpha3.WorkloadEntryInterface {
+	return newFakeWorkloadEntries(c, namespace)
+}
+
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeNetworkingV1alpha3) RESTClient() rest.Interface {

@@ -19,15 +19,48 @@
 package v1alpha1
 
 import (
-	v1alpha1 "github.com/kdubbo/api/meta/v1alpha1"
+	metav1alpha1 "github.com/kdubbo/api/meta/v1alpha1"
 	telemetryv1alpha1 "github.com/kdubbo/api/telemetry/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 //
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-// +genclient
 
+// Telemetry defines how telemetry (tracing) is generated for workloads within a mesh.
+//
+// Telemetry is resolved from least to most specific. Fields explicitly set at
+// a lower level replace the corresponding field from the parent level:
+//
+//  1. Mesh-level configuration (one `Telemetry` resource without a `selector`
+//     in `dubbo-system`)
+//  2. Namespace-level configuration (one `Telemetry` resource without a
+//     `selector` in the workload namespace)
+//  3. Workload-level configuration (a `Telemetry` resource with a matching
+//     `selector` in the workload namespace)
+//
+// <!-- crd generation tags
+// +cue-gen:Telemetry:groupName:telemetry.dubbo.apache.org
+// +cue-gen:Telemetry:versions:v1alpha1
+// +cue-gen:Telemetry:storageVersion
+// +cue-gen:Telemetry:annotations:helm.sh/resource-policy=keep
+// +cue-gen:Telemetry:labels:app=dubbo,chart=dubbo,dubbo=telemetry,heritage=Tiller,release=dubbo
+// +cue-gen:Telemetry:subresource:status
+// +cue-gen:Telemetry:scope:Namespaced
+// +cue-gen:Telemetry:resource:categories=dubbo,telemetry,plural=telemetries,shortNames=telemetry
+// +cue-gen:Telemetry:preserveUnknownFields:false
+// +cue-gen:Telemetry:printerColumn:name=Age,type=date,JSONPath=.metadata.creationTimestamp,description="CreationTimestamp is a timestamp
+// representing the server time when this object was created. It is not guaranteed to be set in happens-before order across separate operations.
+// Clients may not set this value. It is represented in RFC3339 form and is in UTC.
+// Populated by the system. Read-only. Null for lists. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata"
+// -->
+//
+// <!-- go code generation tags
+// +kubetype-gen
+// +kubetype-gen:groupVersion=telemetry.dubbo.apache.org/v1alpha1
+// +genclient
+// +k8s:deepcopy-gen=true
+// -->
 type Telemetry struct {
 	v1.TypeMeta `json:",inline"`
 	// +optional
@@ -37,7 +70,7 @@ type Telemetry struct {
 	// +optional
 	Spec telemetryv1alpha1.Telemetry `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
 
-	Status v1alpha1.DubboStatus `json:"status,omitempty"`
+	Status metav1alpha1.DubboStatus `json:"status,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
