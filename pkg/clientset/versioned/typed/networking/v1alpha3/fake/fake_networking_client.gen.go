@@ -32,6 +32,10 @@ func (c *FakeNetworkingV1alpha3) CircuitBreakerPolicies(namespace string) v1alph
 	return newFakeCircuitBreakerPolicies(c, namespace)
 }
 
+func (c *FakeNetworkingV1alpha3) FaultInjectionPolicies(namespace string) v1alpha3.FaultInjectionPolicyInterface {
+	return newFakeFaultInjectionPolicies(c, namespace)
+}
+
 func (c *FakeNetworkingV1alpha3) ServiceEntries(namespace string) v1alpha3.ServiceEntryInterface {
 	return newFakeServiceEntries(c, namespace)
 }

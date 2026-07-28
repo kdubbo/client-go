@@ -75,6 +75,54 @@ type CircuitBreakerPolicyList struct {
 //
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
+// FaultInjectionPolicy injects controlled faults for calls to target Services.
+//
+// <!-- crd generation tags
+// +cue-gen:FaultInjectionPolicy:groupName:networking.dubbo.apache.org
+// +cue-gen:FaultInjectionPolicy:versions:v1alpha3
+// +cue-gen:FaultInjectionPolicy:storageVersion
+// +cue-gen:FaultInjectionPolicy:annotations:helm.sh/resource-policy=keep
+// +cue-gen:FaultInjectionPolicy:labels:app=dubbo,chart=dubbo,dubbo=networking,heritage=Tiller,release=dubbo
+// +cue-gen:FaultInjectionPolicy:subresource:status
+// +cue-gen:FaultInjectionPolicy:scope:Namespaced
+// +cue-gen:FaultInjectionPolicy:resource:categories=dubbo,networking,shortNames=fip,plural=faultinjectionpolicies,singular=faultinjectionpolicy
+// +cue-gen:FaultInjectionPolicy:preserveUnknownFields:false
+// +cue-gen:FaultInjectionPolicy:printerColumn:name=Targets,type=string,JSONPath=.spec.targetRefs[*].name,description="Gateway API targets."
+// +cue-gen:FaultInjectionPolicy:printerColumn:name=Age,type=date,JSONPath=.metadata.creationTimestamp,description="CreationTimestamp is a timestamp representing the server time when this object was created."
+// -->
+//
+// <!-- go code generation tags
+// +kubetype-gen
+// +kubetype-gen:groupVersion=networking.dubbo.apache.org/v1alpha3
+// +genclient
+// +k8s:deepcopy-gen=true
+// -->
+// +kubebuilder:validation:XValidation:message="at least one of delay or abort must be set",rule="has(self.delay) || has(self.abort)"
+type FaultInjectionPolicy struct {
+	v1.TypeMeta `json:",inline"`
+	// +optional
+	v1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+
+	// Spec defines the implementation of this definition.
+	// +optional
+	Spec networkingv1alpha3.FaultInjectionPolicy `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
+
+	Status v1alpha1.DubboStatus `json:"status,omitempty"`
+}
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// FaultInjectionPolicyList is a collection of FaultInjectionPolicies.
+type FaultInjectionPolicyList struct {
+	v1.TypeMeta `json:",inline"`
+	// +optional
+	v1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	Items       []*FaultInjectionPolicy `json:"items" protobuf:"bytes,2,rep,name=items"`
+}
+
+//
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
 // ServiceEntry adds services that are not discovered from Kubernetes.
 //
 // <!-- crd generation tags

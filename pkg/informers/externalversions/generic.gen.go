@@ -57,6 +57,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 	// Group=networking.dubbo.apache.org, Version=v1alpha3
 	case v1alpha3.SchemeGroupVersion.WithResource("circuitbreakerpolicies"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Networking().V1alpha3().CircuitBreakerPolicies().Informer()}, nil
+	case v1alpha3.SchemeGroupVersion.WithResource("faultinjectionpolicies"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Networking().V1alpha3().FaultInjectionPolicies().Informer()}, nil
 	case v1alpha3.SchemeGroupVersion.WithResource("serviceentries"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Networking().V1alpha3().ServiceEntries().Informer()}, nil
 	case v1alpha3.SchemeGroupVersion.WithResource("workloadentries"):

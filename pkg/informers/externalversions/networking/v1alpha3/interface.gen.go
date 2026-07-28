@@ -26,6 +26,8 @@ import (
 type Interface interface {
 	// CircuitBreakerPolicies returns a CircuitBreakerPolicyInformer.
 	CircuitBreakerPolicies() CircuitBreakerPolicyInformer
+	// FaultInjectionPolicies returns a FaultInjectionPolicyInformer.
+	FaultInjectionPolicies() FaultInjectionPolicyInformer
 	// ServiceEntries returns a ServiceEntryInformer.
 	ServiceEntries() ServiceEntryInformer
 	// WorkloadEntries returns a WorkloadEntryInformer.
@@ -46,6 +48,11 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 // CircuitBreakerPolicies returns a CircuitBreakerPolicyInformer.
 func (v *version) CircuitBreakerPolicies() CircuitBreakerPolicyInformer {
 	return &circuitBreakerPolicyInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// FaultInjectionPolicies returns a FaultInjectionPolicyInformer.
+func (v *version) FaultInjectionPolicies() FaultInjectionPolicyInformer {
+	return &faultInjectionPolicyInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // ServiceEntries returns a ServiceEntryInformer.

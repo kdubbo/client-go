@@ -38,6 +38,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 	// Group=networking.dubbo.apache.org, Version=v1alpha3
 	case v1alpha3.SchemeGroupVersion.WithKind("CircuitBreakerPolicy"):
 		return &networkingv1alpha3.CircuitBreakerPolicyApplyConfiguration{}
+	case v1alpha3.SchemeGroupVersion.WithKind("FaultInjectionPolicy"):
+		return &networkingv1alpha3.FaultInjectionPolicyApplyConfiguration{}
 	case v1alpha3.SchemeGroupVersion.WithKind("ServiceEntry"):
 		return &networkingv1alpha3.ServiceEntryApplyConfiguration{}
 	case v1alpha3.SchemeGroupVersion.WithKind("WorkloadEntry"):

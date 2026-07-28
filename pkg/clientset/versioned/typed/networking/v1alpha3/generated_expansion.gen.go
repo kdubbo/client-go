@@ -20,6 +20,8 @@ package v1alpha3
 
 type CircuitBreakerPolicyExpansion interface{}
 
+type FaultInjectionPolicyExpansion interface{}
+
 type ServiceEntryExpansion interface{}
 
 type WorkloadEntryExpansion interface{}
