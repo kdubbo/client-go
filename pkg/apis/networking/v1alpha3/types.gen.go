@@ -123,6 +123,65 @@ type FaultInjectionPolicyList struct {
 //
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
+// ServiceActivationPolicy declares that requests for a Service may be held
+// while it scales up from zero, instead of failing because the Service has no
+// endpoints.
+//
+// It expresses activation behaviour only. Replica counts, scaling thresholds
+// and cooldowns stay in the autoscaler this policy points at, so a Service is
+// never driven by two controllers writing the same replica count.
+//
+// A policy is only honoured while the referenced autoscaler is reachable and
+// the target protocol is activatable. Both are reported through status
+// conditions rather than silently ignored, because a policy that looks applied
+// but never activates is indistinguishable from a broken Service.
+//
+// <!-- crd generation tags
+// +cue-gen:ServiceActivationPolicy:groupName:networking.dubbo.apache.org
+// +cue-gen:ServiceActivationPolicy:versions:v1alpha3
+// +cue-gen:ServiceActivationPolicy:storageVersion
+// +cue-gen:ServiceActivationPolicy:annotations:helm.sh/resource-policy=keep
+// +cue-gen:ServiceActivationPolicy:labels:app=dubbo,chart=dubbo,dubbo=networking,heritage=Tiller,release=dubbo
+// +cue-gen:ServiceActivationPolicy:subresource:status
+// +cue-gen:ServiceActivationPolicy:scope:Namespaced
+// +cue-gen:ServiceActivationPolicy:resource:categories=dubbo,networking,shortNames=sap,plural=serviceactivationpolicies,singular=serviceactivationpolicy
+// +cue-gen:ServiceActivationPolicy:preserveUnknownFields:false
+// +cue-gen:ServiceActivationPolicy:printerColumn:name=Target,type=string,JSONPath=.spec.targetRef.name,description="Service activated by this policy."
+// +cue-gen:ServiceActivationPolicy:printerColumn:name=Autoscaler,type=string,JSONPath=.spec.autoscalerRef.name,description="Autoscaler that owns the replica count."
+// +cue-gen:ServiceActivationPolicy:printerColumn:name=Age,type=date,JSONPath=.metadata.creationTimestamp,description="CreationTimestamp is a timestamp representing the server time when this object was created."
+// -->
+//
+// <!-- go code generation tags
+// +kubetype-gen
+// +kubetype-gen:groupVersion=networking.dubbo.apache.org/v1alpha3
+// +genclient
+// +k8s:deepcopy-gen=true
+// -->
+type ServiceActivationPolicy struct {
+	v1.TypeMeta `json:",inline"`
+	// +optional
+	v1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+
+	// Spec defines the implementation of this definition.
+	// +optional
+	Spec networkingv1alpha3.ServiceActivationPolicy `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
+
+	Status v1alpha1.DubboStatus `json:"status,omitempty"`
+}
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// ServiceActivationPolicyList is a collection of ServiceActivationPolicies.
+type ServiceActivationPolicyList struct {
+	v1.TypeMeta `json:",inline"`
+	// +optional
+	v1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	Items       []*ServiceActivationPolicy `json:"items" protobuf:"bytes,2,rep,name=items"`
+}
+
+//
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
 // ServiceEntry adds services that are not discovered from Kubernetes.
 //
 // <!-- crd generation tags

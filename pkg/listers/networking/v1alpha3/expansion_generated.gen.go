@@ -34,6 +34,14 @@ type FaultInjectionPolicyListerExpansion interface{}
 // FaultInjectionPolicyNamespaceLister.
 type FaultInjectionPolicyNamespaceListerExpansion interface{}
 
+// ServiceActivationPolicyListerExpansion allows custom methods to be added to
+// ServiceActivationPolicyLister.
+type ServiceActivationPolicyListerExpansion interface{}
+
+// ServiceActivationPolicyNamespaceListerExpansion allows custom methods to be added to
+// ServiceActivationPolicyNamespaceLister.
+type ServiceActivationPolicyNamespaceListerExpansion interface{}
+
 // ServiceEntryListerExpansion allows custom methods to be added to
 // ServiceEntryLister.
 type ServiceEntryListerExpansion interface{}
