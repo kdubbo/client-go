@@ -3,7 +3,7 @@ module github.com/kdubbo/client-go
 go 1.25.0
 
 require (
-	github.com/kdubbo/api v0.0.0-20260728161804-a5971782efe0
+	github.com/kdubbo/api v0.0.0-20260806182421-754eac4e05d4
 	k8s.io/apimachinery v0.34.1
 	k8s.io/client-go v0.34.1
 	sigs.k8s.io/structured-merge-diff/v6 v6.3.0
@@ -54,5 +54,3 @@ require (
 	sigs.k8s.io/randfill v1.0.0 // indirect
 	sigs.k8s.io/yaml v1.6.0 // indirect
 )
-
-replace github.com/kdubbo/api => ../api
