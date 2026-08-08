@@ -29,6 +29,7 @@ import (
 type NetworkingV1alpha3Interface interface {
 	RESTClient() rest.Interface
 	CircuitBreakerPoliciesGetter
+	DxgateServicesGetter
 	FaultInjectionPoliciesGetter
 	ServiceActivationPoliciesGetter
 	ServiceEntriesGetter
@@ -42,6 +43,10 @@ type NetworkingV1alpha3Client struct {
 
 func (c *NetworkingV1alpha3Client) CircuitBreakerPolicies(namespace string) CircuitBreakerPolicyInterface {
 	return newCircuitBreakerPolicies(c, namespace)
+}
+
+func (c *NetworkingV1alpha3Client) DxgateServices(namespace string) DxgateServiceInterface {
+	return newDxgateServices(c, namespace)
 }
 
 func (c *NetworkingV1alpha3Client) FaultInjectionPolicies(namespace string) FaultInjectionPolicyInterface {

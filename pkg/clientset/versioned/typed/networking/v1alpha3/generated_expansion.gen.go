@@ -20,6 +20,8 @@ package v1alpha3
 
 type CircuitBreakerPolicyExpansion interface{}
 
+type DxgateServiceExpansion interface{}
+
 type FaultInjectionPolicyExpansion interface{}
 
 type ServiceActivationPolicyExpansion interface{}

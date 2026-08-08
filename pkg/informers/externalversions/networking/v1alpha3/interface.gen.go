@@ -26,6 +26,8 @@ import (
 type Interface interface {
 	// CircuitBreakerPolicies returns a CircuitBreakerPolicyInformer.
 	CircuitBreakerPolicies() CircuitBreakerPolicyInformer
+	// DxgateServices returns a DxgateServiceInformer.
+	DxgateServices() DxgateServiceInformer
 	// FaultInjectionPolicies returns a FaultInjectionPolicyInformer.
 	FaultInjectionPolicies() FaultInjectionPolicyInformer
 	// ServiceActivationPolicies returns a ServiceActivationPolicyInformer.
@@ -50,6 +52,11 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 // CircuitBreakerPolicies returns a CircuitBreakerPolicyInformer.
 func (v *version) CircuitBreakerPolicies() CircuitBreakerPolicyInformer {
 	return &circuitBreakerPolicyInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// DxgateServices returns a DxgateServiceInformer.
+func (v *version) DxgateServices() DxgateServiceInformer {
+	return &dxgateServiceInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // FaultInjectionPolicies returns a FaultInjectionPolicyInformer.

@@ -45,6 +45,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 	scheme.AddKnownTypes(SchemeGroupVersion,
 		&CircuitBreakerPolicy{},
 		&CircuitBreakerPolicyList{},
+		&DxgateService{},
+		&DxgateServiceList{},
 		&FaultInjectionPolicy{},
 		&FaultInjectionPolicyList{},
 		&ServiceActivationPolicy{},

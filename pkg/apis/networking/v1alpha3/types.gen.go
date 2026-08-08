@@ -75,6 +75,58 @@ type CircuitBreakerPolicyList struct {
 //
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
+// DxgateService is the single mesh API for non-standard application protocols
+// served by dxgate. Ordinary HTTP backends remain Kubernetes Services.
+//
+// HTTPRoute backendRefs select a DxgateService exactly as they select a core
+// Service. dubbod validates the reference, resolves its Kubernetes targets and
+// policies, and delivers the compiled configuration to dxgate over xDS. The
+// data plane does not watch a second, private CRD API.
+//
+// <!-- crd generation tags
+// +cue-gen:DxgateService:groupName:networking.dubbo.apache.org
+// +cue-gen:DxgateService:versions:v1alpha3
+// +cue-gen:DxgateService:storageVersion
+// +cue-gen:DxgateService:annotations:helm.sh/resource-policy=keep
+// +cue-gen:DxgateService:labels:app=dubbo,chart=dubbo,dubbo=networking,heritage=Tiller,release=dubbo
+// +cue-gen:DxgateService:subresource:status
+// +cue-gen:DxgateService:scope:Namespaced
+// +cue-gen:DxgateService:resource:categories=dubbo,networking,shortNames=dxsvc,plural=dxgateservices,singular=dxgateservice
+// +cue-gen:DxgateService:preserveUnknownFields:false
+// +cue-gen:DxgateService:printerColumn:name=Age,type=date,JSONPath=.metadata.creationTimestamp,description="CreationTimestamp is a timestamp representing the server time when this object was created."
+// -->
+//
+// <!-- go code generation tags
+// +kubetype-gen
+// +kubetype-gen:groupVersion=networking.dubbo.apache.org/v1alpha3
+// +genclient
+// +k8s:deepcopy-gen=true
+// -->
+type DxgateService struct {
+	v1.TypeMeta `json:",inline"`
+	// +optional
+	v1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+
+	// Spec defines the implementation of this definition.
+	// +optional
+	Spec networkingv1alpha3.DxgateService `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
+
+	Status v1alpha1.DubboStatus `json:"status,omitempty"`
+}
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// DxgateServiceList is a collection of DxgateServices.
+type DxgateServiceList struct {
+	v1.TypeMeta `json:",inline"`
+	// +optional
+	v1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	Items       []*DxgateService `json:"items" protobuf:"bytes,2,rep,name=items"`
+}
+
+//
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
 // FaultInjectionPolicy injects controlled faults for calls to target Services.
 //
 // <!-- crd generation tags

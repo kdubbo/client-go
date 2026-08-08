@@ -26,6 +26,14 @@ type CircuitBreakerPolicyListerExpansion interface{}
 // CircuitBreakerPolicyNamespaceLister.
 type CircuitBreakerPolicyNamespaceListerExpansion interface{}
 
+// DxgateServiceListerExpansion allows custom methods to be added to
+// DxgateServiceLister.
+type DxgateServiceListerExpansion interface{}
+
+// DxgateServiceNamespaceListerExpansion allows custom methods to be added to
+// DxgateServiceNamespaceLister.
+type DxgateServiceNamespaceListerExpansion interface{}
+
 // FaultInjectionPolicyListerExpansion allows custom methods to be added to
 // FaultInjectionPolicyLister.
 type FaultInjectionPolicyListerExpansion interface{}
