@@ -3,7 +3,7 @@ module github.com/kdubbo/client-go
 go 1.25.0
 
 require (
-	github.com/kdubbo/api v0.0.0-20260809040328-26ca8e81828c
+	github.com/kdubbo/api v0.0.0-20260809042441-64b5ddb809d4
 	k8s.io/apimachinery v0.34.1
 	k8s.io/client-go v0.34.1
 	sigs.k8s.io/structured-merge-diff/v6 v6.3.0
