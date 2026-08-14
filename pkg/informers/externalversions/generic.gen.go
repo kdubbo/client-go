@@ -23,7 +23,6 @@ import (
 
 	v1alpha3 "github.com/kdubbo/client-go/pkg/apis/networking/v1alpha3"
 	securityv1alpha3 "github.com/kdubbo/client-go/pkg/apis/security/v1alpha3"
-	v1alpha1 "github.com/kdubbo/client-go/pkg/apis/telemetry/v1alpha1"
 	telemetryv1alpha3 "github.com/kdubbo/client-go/pkg/apis/telemetry/v1alpha3"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	cache "k8s.io/client-go/tools/cache"
@@ -76,10 +75,6 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Security().V1alpha3().PeerAuthentications().Informer()}, nil
 	case securityv1alpha3.SchemeGroupVersion.WithResource("requestauthentications"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Security().V1alpha3().RequestAuthentications().Informer()}, nil
-
-		// Group=telemetry.dubbo.apache.org, Version=v1alpha1
-	case v1alpha1.SchemeGroupVersion.WithResource("telemetries"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Telemetry().V1alpha1().Telemetries().Informer()}, nil
 
 		// Group=telemetry.dubbo.apache.org, Version=v1alpha3
 	case telemetryv1alpha3.SchemeGroupVersion.WithResource("telemetries"):

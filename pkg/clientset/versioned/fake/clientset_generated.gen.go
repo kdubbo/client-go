@@ -25,8 +25,6 @@ import (
 	fakenetworkingv1alpha3 "github.com/kdubbo/client-go/pkg/clientset/versioned/typed/networking/v1alpha3/fake"
 	securityv1alpha3 "github.com/kdubbo/client-go/pkg/clientset/versioned/typed/security/v1alpha3"
 	fakesecurityv1alpha3 "github.com/kdubbo/client-go/pkg/clientset/versioned/typed/security/v1alpha3/fake"
-	telemetryv1alpha1 "github.com/kdubbo/client-go/pkg/clientset/versioned/typed/telemetry/v1alpha1"
-	faketelemetryv1alpha1 "github.com/kdubbo/client-go/pkg/clientset/versioned/typed/telemetry/v1alpha1/fake"
 	telemetryv1alpha3 "github.com/kdubbo/client-go/pkg/clientset/versioned/typed/telemetry/v1alpha3"
 	faketelemetryv1alpha3 "github.com/kdubbo/client-go/pkg/clientset/versioned/typed/telemetry/v1alpha3/fake"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -139,11 +137,6 @@ func (c *Clientset) NetworkingV1alpha3() networkingv1alpha3.NetworkingV1alpha3In
 // SecurityV1alpha3 retrieves the SecurityV1alpha3Client
 func (c *Clientset) SecurityV1alpha3() securityv1alpha3.SecurityV1alpha3Interface {
 	return &fakesecurityv1alpha3.FakeSecurityV1alpha3{Fake: &c.Fake}
-}
-
-// TelemetryV1alpha1 retrieves the TelemetryV1alpha1Client
-func (c *Clientset) TelemetryV1alpha1() telemetryv1alpha1.TelemetryV1alpha1Interface {
-	return &faketelemetryv1alpha1.FakeTelemetryV1alpha1{Fake: &c.Fake}
 }
 
 // TelemetryV1alpha3 retrieves the TelemetryV1alpha3Client

@@ -24,7 +24,6 @@ import (
 
 	networkingv1alpha3 "github.com/kdubbo/client-go/pkg/clientset/versioned/typed/networking/v1alpha3"
 	securityv1alpha3 "github.com/kdubbo/client-go/pkg/clientset/versioned/typed/security/v1alpha3"
-	telemetryv1alpha1 "github.com/kdubbo/client-go/pkg/clientset/versioned/typed/telemetry/v1alpha1"
 	telemetryv1alpha3 "github.com/kdubbo/client-go/pkg/clientset/versioned/typed/telemetry/v1alpha3"
 	discovery "k8s.io/client-go/discovery"
 	rest "k8s.io/client-go/rest"
@@ -35,7 +34,6 @@ type Interface interface {
 	Discovery() discovery.DiscoveryInterface
 	NetworkingV1alpha3() networkingv1alpha3.NetworkingV1alpha3Interface
 	SecurityV1alpha3() securityv1alpha3.SecurityV1alpha3Interface
-	TelemetryV1alpha1() telemetryv1alpha1.TelemetryV1alpha1Interface
 	TelemetryV1alpha3() telemetryv1alpha3.TelemetryV1alpha3Interface
 }
 
@@ -44,7 +42,6 @@ type Clientset struct {
 	*discovery.DiscoveryClient
 	networkingV1alpha3 *networkingv1alpha3.NetworkingV1alpha3Client
 	securityV1alpha3   *securityv1alpha3.SecurityV1alpha3Client
-	telemetryV1alpha1  *telemetryv1alpha1.TelemetryV1alpha1Client
 	telemetryV1alpha3  *telemetryv1alpha3.TelemetryV1alpha3Client
 }
 
@@ -56,11 +53,6 @@ func (c *Clientset) NetworkingV1alpha3() networkingv1alpha3.NetworkingV1alpha3In
 // SecurityV1alpha3 retrieves the SecurityV1alpha3Client
 func (c *Clientset) SecurityV1alpha3() securityv1alpha3.SecurityV1alpha3Interface {
 	return c.securityV1alpha3
-}
-
-// TelemetryV1alpha1 retrieves the TelemetryV1alpha1Client
-func (c *Clientset) TelemetryV1alpha1() telemetryv1alpha1.TelemetryV1alpha1Interface {
-	return c.telemetryV1alpha1
 }
 
 // TelemetryV1alpha3 retrieves the TelemetryV1alpha3Client
@@ -120,10 +112,6 @@ func NewForConfigAndClient(c *rest.Config, httpClient *http.Client) (*Clientset,
 	if err != nil {
 		return nil, err
 	}
-	cs.telemetryV1alpha1, err = telemetryv1alpha1.NewForConfigAndClient(&configShallowCopy, httpClient)
-	if err != nil {
-		return nil, err
-	}
 	cs.telemetryV1alpha3, err = telemetryv1alpha3.NewForConfigAndClient(&configShallowCopy, httpClient)
 	if err != nil {
 		return nil, err
@@ -151,7 +139,6 @@ func New(c rest.Interface) *Clientset {
 	var cs Clientset
 	cs.networkingV1alpha3 = networkingv1alpha3.New(c)
 	cs.securityV1alpha3 = securityv1alpha3.New(c)
-	cs.telemetryV1alpha1 = telemetryv1alpha1.New(c)
 	cs.telemetryV1alpha3 = telemetryv1alpha3.New(c)
 
 	cs.DiscoveryClient = discovery.NewDiscoveryClient(c)
